@@ -44,6 +44,8 @@ void zb_osif_serial_flush(void);
 
 #define ZB_HW_ZB_AES128
 #define ZB_HW_CRYPTO_SCALARMULT
+#define ZB_HW_CCM_ENCRYPT_N_AUTH_RAW
+#define ZB_HW_CCM_DECRYPT_N_AUTH_RAW
 
 #ifdef ZB_HW_ZB_AES128
 void zb_osif_aes128_hw_encrypt(const zb_uint8_t *key, const zb_uint8_t *msg, zb_uint8_t *c);
@@ -56,6 +58,32 @@ zb_int_t zb_osif_scalarmult(zb_uint8_t *result_point,
                             const zb_uint8_t *point);
 #define zb_hw_crypto_scalarmult	  zb_osif_scalarmult
 #endif /* ZB_HW_CRYPTO_SCALARMULT */
+
+#ifdef ZB_HW_CCM_ENCRYPT_N_AUTH_RAW
+zb_ret_t zb_osif_ccm_encrypt_n_auth_raw(zb_uint8_t *key,
+										const zb_uint8_t *nonce,
+										const zb_uint8_t *string_a,
+										zb_uint32_t string_a_len,
+										const zb_uint8_t *string_m,
+										zb_uint32_t string_m_len,
+										zb_uint8_t *dest_buf,
+										zb_uint16_t dest_len);
+
+#define zb_hw_ccm_encrypt_n_auth_raw zb_osif_ccm_encrypt_n_auth_raw
+#endif /* ZB_HW_CCM_ENCRYPT_N_AUTH_RAW */
+
+#ifdef ZB_HW_CCM_DECRYPT_N_AUTH_RAW
+zb_ret_t zb_osif_ccm_decrypt_n_auth_raw(zb_uint8_t *key,
+										const zb_uint8_t *nonce,
+										const zb_uint8_t *string_a,
+										zb_uint32_t string_a_len,
+										const zb_uint8_t *string_c_u,
+										zb_uint16_t string_c_u_len,
+										zb_uint8_t *string_dest,
+										zb_uint16_t *string_dest_len);
+
+#define zb_hw_ccm_decrypt_n_auth_raw zb_osif_ccm_decrypt_n_auth_raw
+#endif /* ZB_HW_CCM_DECRYPT_N_AUTH_RAW */
 
 
 void zb_osif_init(void);

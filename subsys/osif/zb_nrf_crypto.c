@@ -113,3 +113,121 @@ zb_int_t zb_osif_scalarmult(zb_uint8_t *result_point,
 
 	return 0;
 }
+
+
+zb_ret_t zb_hw_ccm_encrypt_n_auth_raw(zb_uint8_t *key,
+									  const zb_uint8_t *nonce,
+									  const zb_uint8_t *string_a,
+									  zb_uint32_t string_a_len,
+									  const zb_uint8_t *string_m,
+									  zb_uint32_t string_m_len,
+									  zb_uint8_t *dest_buf,
+									  zb_uint16_t dest_len)
+{
+	psa_status_t status;
+	psa_key_id_t key_id;
+	psa_key_attributes_t key_attributes = PSA_KEY_ATTRIBUTES_INIT;
+	size_t output_length = 0;
+
+	if (!key || !nonce || !string_m || !dest_buf) {
+		return RET_ERROR;
+	}
+
+	psa_init();
+
+	psa_set_key_usage_flags(&key_attributes, PSA_KEY_USAGE_ENCRYPT);
+	psa_set_key_lifetime(&key_attributes, PSA_KEY_LIFETIME_VOLATILE);
+	psa_set_key_algorithm(&key_attributes, PSA_ALG_CCM);
+	psa_set_key_type(&key_attributes, PSA_KEY_TYPE_AES);
+	psa_set_key_bits(&key_attributes, 128);
+
+	status = psa_import_key(&key_attributes, key, 16, &key_id);
+	if (status != PSA_SUCCESS) {
+		return RET_ERROR;
+	}
+
+	psa_reset_key_attributes(&key_attributes);
+
+	status = psa_aead_encrypt(
+		key_id,
+		PSA_ALG_CCM,
+		nonce, 13, // Zigbee uses 13-byte nonce
+		string_a, string_a_len, // AAD
+		string_m, string_m_len,
+		dest_buf, dest_len,
+		&output_length
+	);
+
+	psa_destroy_key(key_id);
+
+	if (status == PSA_SUCCESS) {
+		// output_length is the total length (ciphertext + tag)
+		return RET_OK;
+	} else {
+		return RET_ERROR;
+	}
+}
+
+zb_ret_t zb_osif_ccm_decrypt_n_auth_raw(zb_uint8_t *key,
+										const zb_uint8_t *nonce,
+										const zb_uint8_t *string_a,
+										zb_uint32_t string_a_len,
+										const zb_uint8_t *string_c_u,
+										zb_uint16_t string_c_u_len,
+										zb_uint8_t *string_dest,
+										zb_uint16_t *string_dest_len)
+{
+	psa_status_t status;
+	psa_key_id_t key_id;
+	psa_key_attributes_t key_attributes = PSA_KEY_ATTRIBUTES_INIT;
+	size_t output_length = 0;
+	size_t tag_length = 4; // Zigbee CCM* uses 4-byte MIC/tag
+	size_t ciphertext_length;
+
+	if (!key || !nonce || !string_c_u || !string_dest || !string_dest_len) {
+		return RET_ERROR;
+	}
+
+	if (string_c_u_len < tag_length) {
+		*string_dest_len = 0;
+		return RET_ERROR;
+	}
+
+	ciphertext_length = string_c_u_len - tag_length;
+
+	psa_init();
+
+	psa_set_key_usage_flags(&key_attributes, PSA_KEY_USAGE_DECRYPT);
+	psa_set_key_lifetime(&key_attributes, PSA_KEY_LIFETIME_VOLATILE);
+	psa_set_key_algorithm(&key_attributes, PSA_ALG_CCM);
+	psa_set_key_type(&key_attributes, PSA_KEY_TYPE_AES);
+	psa_set_key_bits(&key_attributes, 128);
+
+	status = psa_import_key(&key_attributes, key, 16, &key_id);
+	if (status != PSA_SUCCESS) {
+		*string_dest_len = 0;
+		return RET_ERROR;
+	}
+
+	psa_reset_key_attributes(&key_attributes);
+
+	status = psa_aead_decrypt(
+		key_id,
+		PSA_ALG_CCM,
+		nonce, 13, // Zigbee uses 13-byte nonce
+		string_a, string_a_len, // AAD
+		string_c_u, string_c_u_len, // ciphertext + tag
+		string_dest, string_dest_len ? *string_dest_len : 0,
+		&output_length
+	);
+
+	psa_destroy_key(key_id);
+
+	if (status == PSA_SUCCESS) {
+		*string_dest_len = (zb_uint16_t)output_length;
+		return RET_OK;
+	} else {
+		*string_dest_len = 0;
+		return RET_ERROR;
+	}
+}
