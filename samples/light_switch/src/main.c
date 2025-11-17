@@ -129,6 +129,13 @@ struct buttons_context {
 struct zb_device_ctx {
 	zb_zcl_basic_attrs_t basic_attr;
 	zb_zcl_identify_attrs_t identify_attr;
+	zb_uint32_t checkin_interval;
+	zb_uint32_t long_poll_interval;
+	zb_uint16_t short_poll_interval;
+	zb_uint16_t fast_poll_timeout;
+	zb_uint32_t checkin_interval_min;
+	zb_uint32_t long_poll_interval_min;
+	zb_uint16_t fast_poll_timeout_max;
 };
 
 static struct bulb_context bulb_ctx;
@@ -166,6 +173,17 @@ ZB_ZCL_DECLARE_ON_OFF_CLIENT_ATTRIB_LIST(
 ZB_ZCL_DECLARE_LEVEL_CONTROL_CLIENT_ATTRIB_LIST(
 	level_control_client_attr_list);
 
+/* Declare attribute list for Poll Control cluster (server). */
+ZB_ZCL_DECLARE_POLL_CONTROL_ATTRIB_LIST(
+	poll_control_server_attr_list,
+	&dev_ctx.checkin_interval,
+	&dev_ctx.long_poll_interval,
+	&dev_ctx.short_poll_interval,
+	&dev_ctx.fast_poll_timeout,
+	&dev_ctx.checkin_interval_min,
+	&dev_ctx.long_poll_interval_min,
+	&dev_ctx.fast_poll_timeout_max);
+
 /* Declare cluster list for Dimmer Switch device. */
 ZB_DECLARE_DIMMER_SWITCH_CLUSTER_LIST(
 	dimmer_switch_clusters,
@@ -175,7 +193,8 @@ ZB_DECLARE_DIMMER_SWITCH_CLUSTER_LIST(
 	scenes_client_attr_list,
 	groups_client_attr_list,
 	on_off_client_attr_list,
-	level_control_client_attr_list);
+	level_control_client_attr_list,
+	poll_control_server_attr_list);
 
 /* Declare endpoint for Dimmer Switch device. */
 ZB_DECLARE_DIMMER_SWITCH_EP(
@@ -353,6 +372,15 @@ static void app_clusters_attr_init(void)
 
 	/* Identify cluster attributes data. */
 	dev_ctx.identify_attr.identify_time = ZB_ZCL_IDENTIFY_IDENTIFY_TIME_DEFAULT_VALUE;
+
+	/* Poll Control cluster attributes data. */
+	dev_ctx.checkin_interval = ZB_ZCL_POLL_CONTROL_CHECKIN_INTERVAL_DEFAULT_VALUE;
+	dev_ctx.long_poll_interval = ZB_ZCL_POLL_CONTROL_LONG_POLL_INTERVAL_DEFAULT_VALUE;
+	dev_ctx.short_poll_interval = ZB_ZCL_POLL_CONTROL_SHORT_POLL_INTERVAL_DEFAULT_VALUE;
+	dev_ctx.fast_poll_timeout = ZB_ZCL_POLL_CONTROL_FAST_POLL_TIMEOUT_DEFAULT_VALUE;
+	dev_ctx.checkin_interval_min = ZB_ZCL_POLL_CONTROL_CHECKIN_MIN_INTERVAL_DEFAULT_VALUE;
+	dev_ctx.long_poll_interval_min = ZB_ZCL_POLL_CONTROL_LONG_POLL_MIN_INTERVAL_DEFAULT_VALUE;
+	dev_ctx.fast_poll_timeout_max = ZB_ZCL_POLL_CONTROL_FAST_POLL_TIMEOUT_MAX_VALUE;
 }
 
 /**@brief Function to toggle the identify LED.

@@ -28,7 +28,7 @@
 /** @cond internals_doc */
 
 /** Dimmer Switch IN (server) clusters number */
-#define ZB_DIMMER_SWITCH_IN_CLUSTER_NUM 2
+#define ZB_DIMMER_SWITCH_IN_CLUSTER_NUM 3
 
 /** Dimmer Switch OUT (client) clusters number */
 #define ZB_DIMMER_SWITCH_OUT_CLUSTER_NUM 5
@@ -52,6 +52,7 @@
  * @param groups_client_attr_list - attribute list for Groups cluster (client role)
  * @param on_off_client_attr_list - attribute list for On/Off cluster (client role)
  * @param level_control_client_attr_list - attribute list for Level Control cluster (client role)
+ * @param poll_control_server_attr_list - attribute list for Poll Control cluster (server role)
  */
 #define ZB_DECLARE_DIMMER_SWITCH_CLUSTER_LIST(					  \
 		cluster_list_name,						  \
@@ -61,7 +62,8 @@
 		scenes_client_attr_list,					  \
 		groups_client_attr_list,					  \
 		on_off_client_attr_list,					  \
-		level_control_client_attr_list)					  \
+		level_control_client_attr_list,					  \
+		poll_control_server_attr_list)					  \
 zb_zcl_cluster_desc_t cluster_list_name[] =					  \
 {										  \
 	ZB_ZCL_CLUSTER_DESC(							  \
@@ -112,6 +114,13 @@ zb_zcl_cluster_desc_t cluster_list_name[] =					  \
 		(level_control_client_attr_list),				  \
 		ZB_ZCL_CLUSTER_CLIENT_ROLE,					  \
 		ZB_ZCL_MANUF_CODE_INVALID					  \
+	),									  \
+	ZB_ZCL_CLUSTER_DESC(							  \
+		ZB_ZCL_CLUSTER_ID_POLL_CONTROL,					  \
+		ZB_ZCL_ARRAY_SIZE(poll_control_server_attr_list, zb_zcl_attr_t), \
+		(poll_control_server_attr_list),				  \
+		ZB_ZCL_CLUSTER_SERVER_ROLE,					  \
+		ZB_ZCL_MANUF_CODE_INVALID					  \
 	)									  \
 }
 
@@ -139,6 +148,7 @@ zb_zcl_cluster_desc_t cluster_list_name[] =					  \
 		{								    \
 			ZB_ZCL_CLUSTER_ID_BASIC,				    \
 			ZB_ZCL_CLUSTER_ID_IDENTIFY,				    \
+			ZB_ZCL_CLUSTER_ID_POLL_CONTROL,				    \
 			ZB_ZCL_CLUSTER_ID_IDENTIFY,				    \
 			ZB_ZCL_CLUSTER_ID_SCENES,				    \
 			ZB_ZCL_CLUSTER_ID_GROUPS,				    \
