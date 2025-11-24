@@ -646,7 +646,7 @@ void zboss_signal_handler(zb_bufid_t bufid)
 		/* Call default signal handler. */
 		ZB_ERROR_CHECK(zigbee_default_signal_handler(bufid));
 		if (status == RET_OK) {
-			zb_zdo_pim_set_long_poll_interval(3000);
+			// zb_zdo_pim_set_long_poll_interval(7000);
 
 			/* Check the light device address. */
 			if (bulb_ctx.short_addr == 0xFFFF) {
