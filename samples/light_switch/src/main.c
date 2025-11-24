@@ -669,6 +669,7 @@ void zboss_signal_handler(zb_bufid_t bufid)
 
 	switch (sig) {
 	case ZB_BDB_SIGNAL_DEVICE_REBOOT:
+		zb_zdo_pim_set_long_poll_interval(ZB_QUARTERECONDS_TO_MSEC(dev_ctx.long_poll_interval));
 	/* fall-through */
 	case ZB_BDB_SIGNAL_STEERING:
 		/* Call default signal handler. */
