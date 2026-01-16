@@ -1,0 +1,14 @@
+#
+# Copyright (c) 2024 Nordic Semiconductor ASA
+#
+# SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+#
+
+# Source base Zephyr Kconfig first
+source "Kconfig.zephyr"
+
+# Source the nRF Matter common Kconfig if Matter is enabled
+source "$(ZEPHYR_NRF_MODULE_DIR)/samples/matter/common/src/Kconfig"
+
+# Source Matter features Kconfig for CONFIG_CHIP_LAST_FABRIC_REMOVED_* options
+rsource "$(ZEPHYR_CONNECTEDHOMEIP_MODULE_DIR)/config/nrfconnect/chip-module/Kconfig.features"

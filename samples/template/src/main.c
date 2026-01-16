@@ -18,6 +18,7 @@
 #include <zigbee/zigbee_app_utils.h>
 #include <zb_nrf_platform.h>
 #include "zb_range_extender.h"
+#include "app_task_c.h"
 
 
 /* Device endpoint, used to receive ZCL commands. */
@@ -243,5 +244,6 @@ int main(void)
 
 	LOG_INF("Zigbee R23 application template started");
 
-	return 0;
+	/* Start the dual protocol application task */
+        app_task_start();	return 0;
 }

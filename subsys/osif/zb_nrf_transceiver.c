@@ -542,7 +542,8 @@ void zb_osif_get_ieee_eui64(zb_ieee_addr_t ieee_eui64)
 			net_if_get_link_addr(net_iface)->len);
 }
 
-void ieee802154_init(struct net_if *iface)
+/* Renamed to avoid conflict with OpenThread L2 layer for protocol switching */
+void zigbee_ieee802154_init(struct net_if *iface)
 {
 	__ASSERT_NO_MSG(iface);
 	net_iface = iface;
@@ -565,8 +566,9 @@ void ieee802154_init(struct net_if *iface)
 	LOG_DBG("The 802.15.4 interface initialized.");
 }
 
-enum net_verdict ieee802154_handle_ack(struct net_if *iface,
-				       struct net_pkt *pkt)
+/* Renamed to avoid conflict with OpenThread L2 layer for protocol switching */
+enum net_verdict zigbee_ieee802154_handle_ack(struct net_if *iface,
+					       struct net_pkt *pkt)
 {
 	ARG_UNUSED(iface);
 
