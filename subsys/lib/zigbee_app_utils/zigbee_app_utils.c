@@ -318,7 +318,7 @@ zb_ret_t zigbee_default_signal_handler(zb_bufid_t bufid)
 				ZB_PIBCACHE_PAN_ID());
 		} else {
 			if (role != ZB_NWK_DEVICE_TYPE_COORDINATOR) {
-				LOG_INF("Unable to join the network, start network steering");
+				LOG_INF("Unable to join the network, continue network rejoin procedure");
 				start_network_rejoin();
 			} else {
 				LOG_ERR("Failed to initialize Zigbee stack using NVRAM data (status: %d)",
