@@ -413,6 +413,16 @@ config ZIGBEE_TC_REJOIN_ENABLED
 	bool "Enables Trust Center Rejoin"
 	default y
 
+config ZIGBEE_R22_BEHAVIOR
+	bool "Use Zigbee PRO R22 joining behavior"
+	depends on !ZIGBEE_LIBRARY_NCP_DEV
+	help
+	  When enabled, the add-on calls zboss_use_r22_behavior() from
+	  zigbee_enable(), before the ZBOSS thread is started. This forces
+	  the stack to use legacy R22 joining (classic association and
+	  transport-key flow) instead of the default R23 behavior
+	  (NWK Commissioning followed by DLK).
+
 config ZIGBEE_DEV_REJOIN_TIMEOUT_MS
 	int "Timeout in ms after which End Device stops to send beacons if can not join/rejoin a network"
 	default 200000
