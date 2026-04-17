@@ -397,6 +397,17 @@ static void zboss_thread(void *arg1, void *arg2, void *arg3)
 	zb_err_code = zboss_start_no_autostart();
 	__ASSERT(zb_err_code == RET_OK, "Error when starting ZBOSS stack!");
 
+#if IS_ENABLED(CONFIG_ZIGBEE_INSECURE_DEFAULT_NWK_KEY)
+	{
+		zb_uint8_t insecure_nwk_key[ZB_CCM_KEY_SIZE] = {
+			0x5A, 0x69, 0x67, 0x42, 0x65, 0x65, 0x41, 0x6C,
+			0x6C, 0x69, 0x61, 0x6E, 0x63, 0x65, 0x30, 0x39,
+		};
+
+		zb_secur_setup_nwk_key(insecure_nwk_key, 0);
+	}
+#endif
+
 	stack_is_started = true;
 #ifdef CONFIG_ZIGBEE_SHELL
 	zb_shell_configure_endpoint();

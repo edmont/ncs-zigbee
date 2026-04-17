@@ -37,5 +37,16 @@ zephyr_library_link_libraries(zboss)
 zephyr_compile_definitions(CUSTOM_IEEE802154_L2=ZIGBEE_L2)
 zephyr_compile_definitions(ZIGBEE_L2=ZIGBEE_ADD_ON)
 
+if(CONFIG_ZIGBEE_INSECURE_DEFAULT_NWK_KEY)
+  message(WARNING "
+      -------------------------------------------------------------------
+      --- WARNING: CONFIG_ZIGBEE_INSECURE_DEFAULT_NWK_KEY is enabled. ---
+      --- The Zigbee NWK key is forced to the well-known             ---
+      --- \"ZigBeeAlliance09\" value. The resulting network provides    ---
+      --- NO confidentiality. DO NOT USE THIS CONFIGURATION IN       ---
+      --- PRODUCTION.                                                ---
+      -------------------------------------------------------------------")
+endif()
+
 include(${ZEPHYR_NRF_MODULE_DIR}/cmake/extensions.cmake)
 ncs_add_partition_manager_config(partition_manager/pm.yml.zboss)
