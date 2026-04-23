@@ -231,11 +231,11 @@ static void zb_button_handler_impl(uint32_t button_state, uint32_t has_changed) 
 }
 
 #ifdef CONFIG_CHIP
-void zb_button_handler(uint32_t button_state, uint32_t has_changed) {
+extern "C" void zb_button_handler(uint32_t button_state, uint32_t has_changed) {
   zb_button_handler_impl(button_state, has_changed);
 }
 
-void zb_register_button_handler(void) {
+extern "C" void zb_register_button_handler(void) {
   static struct button_handler handler;
 
   handler.cb = zb_button_handler;
@@ -494,7 +494,7 @@ void zboss_signal_handler(zb_bufid_t bufid) {
   }
 }
 
-int ZigbeeStart(void) {
+extern "C" int ZigbeeStart(void) {
   int blink_status = 0;
   int err;
 
