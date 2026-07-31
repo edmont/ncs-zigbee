@@ -728,8 +728,24 @@ static void bdb_initialization_machine(zb_uint8_t param)
       {
         if (bdb_joined() && zb_zdo_joined())
         {
-          TRACE_MSG(TRACE_ZDO1, "Already inited, skip initialization", (FMT__0));
-          bdb_commissioning_signal(BDB_COMM_SIGNAL_INIT_FINISH, param);
+#if defined ZB_ROUTER_ROLE
+          if (ZB_IS_DEVICE_ZR())
+          {
+            /* ZR must run NLME start-router after reboot even when NVRAM
+             * already marks the device joined; skipping that step leaves the
+             * router in an invalid state (Touchlink distributed networks hit
+             * this path and assert shortly after DEVICE_REBOOT). */
+            TRACE_MSG(TRACE_ZDO1, "Already joined ZR: start router", (FMT__0));
+            ZB_BDB().bdb_commissioning_mode &= ~ZB_BDB_NETWORK_STEERING;
+            ZB_BDB().bdb_application_signal = ZB_BDB_SIGNAL_DEVICE_REBOOT;
+            ZB_SCHEDULE_CALLBACK(zb_zdo_start_router, param);
+          }
+          else
+#endif
+          {
+            TRACE_MSG(TRACE_ZDO1, "Already inited, skip initialization", (FMT__0));
+            bdb_commissioning_signal(BDB_COMM_SIGNAL_INIT_FINISH, param);
+          }
         }
         else
         {
