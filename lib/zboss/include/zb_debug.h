@@ -54,8 +54,6 @@
    @param caller_line - line in the source
  */
 void zb_abort(char *caller_file, int caller_line);
-zb_int_t zb_get_last_abort_line(void);
-char *zb_get_last_abort_file(void);
 
 #ifndef ZB_BINARY_TRACE
 /** @cond internals_doc */

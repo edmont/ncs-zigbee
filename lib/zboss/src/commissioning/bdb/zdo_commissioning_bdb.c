@@ -292,6 +292,7 @@ zb_bool_t bdb_start_top_level_commissioning(zb_uint8_t mode)
   /* Do stack init and startup */
   if (!zb_zdo_joined())
   {
+#ifndef NCP_MODE_HOST
     if (ZG->nwk.is_nwk_started)
     {
       /* Stack already continued after zboss_start_no_autostart(); do not
@@ -321,6 +322,7 @@ zb_bool_t bdb_start_top_level_commissioning(zb_uint8_t mode)
       }
     }
     else
+#endif /* NCP_MODE_HOST */
     {
       ZB_BDB().bdb_commissioning_step = ZB_BDB_STEP_INITIALIZATION;
       zboss_start_continue();
@@ -451,7 +453,11 @@ zb_bool_t bdb_joined(void)
   zb_get_extended_pan_id(ext_pan_id);
   joined = (zb_bool_t)(!ZB_EXTPANID_IS_ZERO(ext_pan_id)
                        && zb_zdo_authenticated()
-                       && (zb_zdo_tclk_valid() || ZB_TCPOL().waiting_for_tclk_exchange));
+                       && (zb_zdo_tclk_valid()
+#ifndef NCP_MODE_HOST
+                           || ZB_TCPOL().waiting_for_tclk_exchange
+#endif
+                           ));
 
   return joined;
 }
@@ -685,6 +691,7 @@ void bdb_initialization_procedure(zb_cb_param_t param)
 
 
 #ifdef ZB_JOIN_CLIENT
+#ifndef NCP_MODE_HOST
 static void bdb_call_key_exchange(zb_cb_param_t param)
 {
   if (bdb_is_key_exchange_needed())
@@ -718,6 +725,7 @@ static void bdb_schedule_tclku_if_needed(zb_cb_param_t param)
     }
   }
 }
+#endif /* NCP_MODE_HOST */
 #endif /* ZB_JOIN_CLIENT */
 
 
@@ -980,12 +988,14 @@ static void bdb_initialization_machine(zb_cb_param_t param)
     case BDB_COMM_SIGNAL_NWK_START_ROUTER_CONF:
 #ifdef ZB_JOIN_CLIENT
       TRACE_MSG(TRACE_ZDO1, "Router started after rejoin", (FMT__0));
+#ifndef NCP_MODE_HOST
       /* Can be here only after rejoin: check cbke (it's an optional step) */
       if (bdb_is_cbke_needed())
       {
         ZB_SCHEDULE_CALLBACK(zdo_commissioning_seek_cbke, ZB_PACK_2_U16_IN_U32(param, 0u));
       }
       else
+#endif /* NCP_MODE_HOST */
 #endif /* ZB_JOIN_CLIENT */
       {
         bdb_commissioning_signal(BDB_COMM_SIGNAL_NWK_JOIN_DONE, param);
@@ -1092,12 +1102,14 @@ static void bdb_rejoin_next_step(zb_cb_param_t cb_param)
       }
     }
 
+#ifndef NCP_MODE_HOST
     if (ZB_U2B(secure) && !ZG->aps.authenticated)
     {
       TRACE_MSG(TRACE_ERROR, "Smth wrong with rejoin logic", (FMT__0));
       ZB_ASSERT(0);
       ZG->aps.authenticated = 1u; /* for release build */
     }
+#endif /* NCP_MODE_HOST */
 
     if (ZB_BDB_REJOIN_STEP_PRIMARY == ZB_BDB().bdb_next_rejoin_step && list_is_empty)
     {
@@ -1755,11 +1767,13 @@ static void bdb_network_steering_machine(zb_cb_param_t param)
     /* We're in this state only on join: check, if CBKE supported by ZC.
        Also, seek_cbke function will try to get TCLK if it haven't been received by now. */
 #ifdef ZB_JOIN_CLIENT
+#ifndef NCP_MODE_HOST
       if (bdb_is_cbke_needed())
       {
         ZB_SCHEDULE_CALLBACK(zdo_commissioning_seek_cbke, ZB_PACK_2_U16_IN_U32(param, 0u));
       }
       else
+#endif /* NCP_MODE_HOST */
 #endif /* ZB_JOIN_CLIENT */
       {
         bdb_commissioning_signal(BDB_COMM_SIGNAL_NWK_JOIN_DONE, param);
@@ -1817,8 +1831,10 @@ static void bdb_network_steering_machine(zb_cb_param_t param)
     case BDB_COMM_SIGNAL_NETWORK_STEERING_TCLK_DONE:
       TRACE_MSG(TRACE_ZDO1, "TCLK succeeded", (FMT__0));
 #ifdef ZB_JOIN_CLIENT
+#ifndef NCP_MODE_HOST
       /* we can received this signal, when we didn't establish a tclk (e.g. ZC is a legacy dev), so let's schedule a tclku procedure */
       bdb_schedule_tclku_if_needed(0u);
+#endif /* NCP_MODE_HOST */
 #endif
       ZB_BDB().bdb_commissioning_status = ZB_BDB_STATUS_IN_PROGRESS;
       /* Join is finished - can reset the blacklist. */
@@ -1856,15 +1872,23 @@ static void bdb_network_steering_machine(zb_cb_param_t param)
               the app signal has "ZB_BDB_SIGNAL_STEERING" value. */
         if (!zdo_secur_waiting_for_tclk_update()
             && zb_zdo_tclk_valid()
+#ifndef NCP_MODE_HOST
             && bdb_tc_connectivity_checks_enabled()
+#endif /* NCP_MODE_HOST */
             && (BDB_COMM_CTX().bdb_application_signal == ZB_BDB_SIGNAL_DEVICE_FIRST_START
                 || BDB_COMM_CTX().bdb_application_signal == ZB_BDB_SIGNAL_DEVICE_REBOOT
                 || BDB_COMM_CTX().bdb_application_signal == ZB_BDB_SIGNAL_TC_REJOIN_DONE))
           {
+#ifndef NCP_MODE_HOST
             /* If there is no need to update TCLK, initiate TC connectivity checks.
                Formation machine will be called after discovery of method that supported by TC.
                ZB_COMM_SIGNAL_TC_CONNECTIVITY_METHOD_DISCOVERED signal will be called. */
             zb_bdb_tc_connectivity_autostart_checking_after_bdb();
+#else
+            TRACE_MSG(TRACE_ZDO1, "Network Steering finished, next step - Network Formation", (FMT__0));
+            bdb_network_steering_start_formation(param);
+            param = 0u;
+#endif /* NCP_MODE_HOST */
           }
           else
           {
@@ -2198,7 +2222,9 @@ static void bdb_wwah_rejoin_machine(zb_cb_param_t param)
       TRACE_MSG(TRACE_ZDO1, "Start Rejoin", (FMT__0));
 
       /* Double-check this should be stopped during Rejoin */
+#ifndef NCP_MODE_HOST
       zb_bdb_tc_connectivity_stop_checking();
+#endif /* NCP_MODE_HOST */
       zb_zcl_wwah_stop_bad_parent_recovery();
 
       if (!BDB_COMM_CTX().rejoin.rr_skip_savepoint)
@@ -2593,7 +2619,9 @@ static void bdb_handle_initiate_rejoin_signal(zb_bufid_t param)
   TRACE_MSG(TRACE_ZDO1, "Handle init rejoin, reason: %d", (FMT__D, rejoin_reason));
 
 #ifdef ZB_JOIN_CLIENT
+#ifndef NCP_MODE_HOST
   zb_bdb_tc_connectivity_stop_checking();
+#endif /* NCP_MODE_HOST */
 #endif /* ZB_JOIN_CLIENT */
 
   if (rejoin_reason == ZB_REJOIN_REASON_DEV_ANNCE_SENDING_FAILED)
@@ -2650,14 +2678,17 @@ static void bdb_handle_dev_annce_sent_signal(zb_bufid_t param)
        This is ZED-specific routine: need to seek for KE cluster presence on ZC.
        For ZR the same will be done after router_start_confirm received:
         see BDB_COMM_SIGNAL_NWK_START_ROUTER_CONF signal handling. */
+#ifndef NCP_MODE_HOST
     if (bdb_is_cbke_needed())
     {
       ZB_SCHEDULE_CALLBACK(zdo_commissioning_seek_cbke, ZB_PACK_2_U16_IN_U32(param, 0u));
     }
     else
+#endif /* NCP_MODE_HOST */
     {
       bdb_commissioning_signal(BDB_COMM_SIGNAL_NWK_JOIN_DONE, param);
 
+#ifndef NCP_MODE_HOST
       if (ZB_TCPOL().disable_min_fast_poll_duration_after_join)
       {
         zb_zdo_fast_poll_leave(0);
@@ -2666,6 +2697,7 @@ static void bdb_handle_dev_annce_sent_signal(zb_bufid_t param)
       {
         ZB_SCHEDULE_ALARM(zb_zdo_fast_poll_leave, 0, ZB_TIME_ONE_SECOND * ZB_BDBC_MIN_FAST_POLL_DURATION_AFTER_JOIN);
       }
+#endif /* NCP_MODE_HOST */
     }
   }
 }
@@ -2734,7 +2766,9 @@ static void bdb_handle_leave_done_signal(zb_bufid_t param)
   }
 
   /* Stop checking that TC is accessible. */
+#ifndef NCP_MODE_HOST
   zb_bdb_tc_connectivity_stop_checking();
+#endif /* NCP_MODE_HOST */
 
   if (param != ZB_BUF_INVALID)
   {
@@ -2808,7 +2842,9 @@ static void bdb_handle_leave_with_rejoin_signal(zb_bufid_t param)
   zdo_inform_app_leave(ZB_NWK_LEAVE_TYPE_REJOIN);
 
   /* Stop checking that TC is accessible. */
+#ifndef NCP_MODE_HOST
   zb_bdb_tc_connectivity_stop_checking();
+#endif /* NCP_MODE_HOST */
 
 #ifndef NCP_MODE_HOST
   rejoin_reason = ZB_BUF_GET_PARAM(param, zb_uint8_t);
@@ -3246,12 +3282,14 @@ void bdb_force_link(void)
   COMM_SELECTOR().get_install_code_policy = bdb_get_installcode_policy;
 #endif /* !NCP_MODE_HOST */
 
+#ifndef NCP_MODE_HOST
   ZCL_SELECTOR().block_zcl_cmd = zb_bdb_tc_connectivity_block_zcl_cmd;
   ZCL_SELECTOR().read_attr_resp_handler = zb_bdb_tc_connectivity_handle_read_attr_resp;
 
 #ifdef ZB_HA_ENABLE_POLL_CONTROL_SERVER
   ZCL_SELECTOR().poll_control_checkin_notifier = bdb_tc_connectivity_poll_control_checkin_handler;
 #endif /* ZB_HA_ENABLE_POLL_CONTROL_SERVER */
+#endif /* NCP_MODE_HOST */
 }
 
 

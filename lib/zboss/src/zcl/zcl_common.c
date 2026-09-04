@@ -1381,7 +1381,11 @@ zb_bool_t cluster_needs_aps_encryption(zb_uint8_t endpoint_id, zb_uint16_t clust
 
       /* Needed for BDB3.1: poll control should be encrypted if sent to TC. */
       case ZB_ZCL_CLUSTER_ID_POLL_CONTROL:
+#ifndef NCP_MODE_HOST
         res = !ZB_R22_GU_BEHAVIOR_ENABLED();
+#else
+        res = ZB_TRUE;
+#endif
         break;
 
       /* Zigbee Direct specification (12.3.5.1.): In a centralized security network,
