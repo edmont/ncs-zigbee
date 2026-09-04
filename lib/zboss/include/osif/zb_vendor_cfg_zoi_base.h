@@ -11,7 +11,7 @@
 
 #define ZB_LIMIT_VISIBILITY
 
-#define ZB_USE_SLEEP
+/* ZB_USE_SLEEP: set from CONFIG_ZB_USE_SLEEP in zb_vendor.h (respects Kconfig). */
 #define APS_FRAGMENTATION
 #define ZB_ALL_DEVICE_SUPPORT
 #define ZB_PRODUCTION_CONFIG
