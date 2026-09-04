@@ -288,12 +288,43 @@ zb_bool_t bdb_start_top_level_commissioning(zb_uint8_t mode)
   }
 
   ZB_BDB().bdb_commissioning_mode = mode;
-  ZB_BDB().bdb_commissioning_step = ZB_BDB_STEP_INITIALIZATION;
 
   /* Do stack init and startup */
   if (!zb_zdo_joined())
   {
-    zboss_start_continue();
+    if (ZG->nwk.is_nwk_started)
+    {
+      /* Stack already continued after zboss_start_no_autostart(); do not
+       * call zboss_start_continue() again (NCS SoC: assert/reboot).
+       */
+      ZB_BDB().bdb_commissioning_status = ZB_BDB_STATUS_IN_PROGRESS;
+      if (mode == ZB_BDB_NETWORK_FORMATION_ONLY)
+      {
+        ZB_BDB().bdb_commissioning_step = ZB_BDB_STEP_NETWORK_FORMATION;
+        if (!ZB_U2B(ZB_BDB().bdb_start_after_reboot))
+        {
+          ZB_BDB().bdb_application_signal = ZB_BDB_SIGNAL_FORMATION;
+        }
+        ZB_BDB().v_do_primary_scan = ZB_BDB_JOIN_MACHINE_PRIMARY_SCAN;
+        bdb_commissioning_signal(BDB_COMM_SIGNAL_NETWORK_FORMATION_START, 0);
+      }
+      else if (mode == ZB_BDB_NETWORK_STEERING
+               || mode == ZB_BDB_NETWORK_STEERING_ONLY)
+      {
+        ZB_BDB().bdb_commissioning_step = ZB_BDB_STEP_NETWORK_STEERING;
+        bdb_commissioning_signal(BDB_COMM_SIGNAL_NETWORK_STEERING_START, 0);
+      }
+      else
+      {
+        ZB_BDB().bdb_commissioning_step = ZB_BDB_STEP_INITIALIZATION;
+        bdb_commissioning_signal(BDB_COMM_SIGNAL_INIT_START, 0);
+      }
+    }
+    else
+    {
+      ZB_BDB().bdb_commissioning_step = ZB_BDB_STEP_INITIALIZATION;
+      zboss_start_continue();
+    }
   }
   else
   {

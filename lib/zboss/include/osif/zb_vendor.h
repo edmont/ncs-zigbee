@@ -22,6 +22,8 @@
 
 #ifdef CONFIG_ZB_PSA_CRYPTO
 #include "zb_cfg_psa.h"
+/* Nordic entropy driver; app PSA config omits PSA_WANT_GENERATE_RANDOM. */
+#define ZB_RANDOM_HARDWARE
 #endif
 
 #include "zb_config_platform.h"
