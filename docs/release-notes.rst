@@ -16,6 +16,8 @@ For a full list of |addon| releases, related |NCS| and ZBOSS stack and NCP host 
 +-------------------+------------------+-----------------------+---------------------+
 | |addon| version   | |NCS| version    | ZBOSS stack version   | NCP host version    |
 +===================+==================+=======================+=====================+
+| 1.5.0 (TBD)       | 3.4.0            | 5.0.4.1               | TBD                 |
++-------------------+------------------+-----------------------+---------------------+
 | 1.4.0             | 3.4.0            | 4.2.2.5               | 3.7.0               |
 +-------------------+------------------+-----------------------+---------------------+
 | 1.3.0             | 2.9.2            | 4.2.2.4               | 3.6.0               |
@@ -48,6 +50,13 @@ The following release is `supported <Software maturity levels_>`_.
 
   * Improved ZBOSS NVRAM storage by batching flash writes into fewer operations.
     Cache size is controlled by ``CONFIG_ZIGBEE_NVRAM_WRITE_CACHE_SIZE``.
+
+|addon| v1.5.0 - TBD (ZBOSS 5)
+*******************************
+
+Port to ZBOSS 5.0.4.1 (``zboss_features``) with platform 7.x glue, updated prebuilt SDK,
+Z5 API migration (BDB channel lists, ``zb_cb_param_t`` callbacks, removed ``zb_callback2_t``),
+and export fixes retaining ZLL/Touchlink headers.
 
 .. _zigbee_release:
 
