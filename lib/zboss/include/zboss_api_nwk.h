@@ -617,6 +617,10 @@ zb_nwk_pib_cache_t *zb_nwk_get_pib_cache(void);
 #else
 #define ZB_PIBCACHE_RX_ON_WHEN_IDLE()  ZB_B2U(zb_get_rx_on_when_idle())
 #endif
+/** Cached value of CurrentChannel attribute */
+#define ZB_PIBCACHE_CURRENT_CHANNEL()  zb_get_current_channel()
+/** Cached value of CurrentPage attribute */
+#define ZB_PIBCACHE_CURRENT_PAGE()  zb_get_current_page()
 #endif /* !NCP_MODE_HOST */
 
 /**

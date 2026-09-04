@@ -42,6 +42,9 @@
 #ifndef ZB_VENDOR_H__
 #define ZB_VENDOR_H__
 
+/* NCS Zephyr osif (zb_nrf_transceiver.c) uses 2-arg zb_buf_* macros. */
+#define ZB_NCS_NO_DEBUG_BUFFERS 1
+
 #include "zb_vendor_cfg_zoi_base.h"
 
 /**
@@ -290,9 +293,16 @@
 #endif
 
 #ifdef CONFIG_ZB_CONFIG_OVERALL_NETWORK_SIZE
-#ifndef ZB_CONFIG_OVERALL_NETWORK_SIZE
+#undef ZB_CONFIG_OVERALL_NETWORK_SIZE
 #define ZB_CONFIG_OVERALL_NETWORK_SIZE CONFIG_ZB_CONFIG_OVERALL_NETWORK_SIZE
 #endif
+
+#if defined(CONFIG_ZB_CONFIG_HIGH_TRAFFIC) || defined(CONFIG_ZB_CONFIG_MODERATE_TRAFFIC) || \
+	defined(CONFIG_ZB_CONFIG_LIGHT_TRAFFIC) || defined(CONFIG_ZB_CONFIG_LARGE_NET_TRAFFIC)
+#undef ZB_CONFIG_HIGH_TRAFFIC
+#undef ZB_CONFIG_MODERATE_TRAFFIC
+#undef ZB_CONFIG_LIGHT_TRAFFIC
+#undef ZB_CONFIG_LARGE_NET_TRAFFIC
 #endif
 
 #ifdef CONFIG_ZB_CONFIG_HIGH_TRAFFIC
@@ -307,6 +317,18 @@
 #define ZB_CONFIG_LIGHT_TRAFFIC
 #endif
 
+#ifdef CONFIG_ZB_CONFIG_LARGE_NET_TRAFFIC
+#define ZB_CONFIG_LARGE_NET_TRAFFIC
+#endif
+
+#if defined(CONFIG_ZB_CONFIG_APPLICATION_COMPLEX) || defined(CONFIG_ZB_CONFIG_APPLICATION_MODERATE) || \
+	defined(CONFIG_ZB_CONFIG_APPLICATION_SIMPLE) || defined(CONFIG_ZB_CONFIG_APPLICATION_LARGE_NET)
+#undef ZB_CONFIG_APPLICATION_COMPLEX
+#undef ZB_CONFIG_APPLICATION_MODERATE
+#undef ZB_CONFIG_APPLICATION_SIMPLE
+#undef ZB_CONFIG_APPLICATION_LARGE_NET
+#endif
+
 #ifdef CONFIG_ZB_CONFIG_APPLICATION_COMPLEX
 #define ZB_CONFIG_APPLICATION_COMPLEX
 #endif
@@ -317,6 +339,10 @@
 
 #ifdef CONFIG_ZB_CONFIG_APPLICATION_SIMPLE
 #define ZB_CONFIG_APPLICATION_SIMPLE
+#endif
+
+#ifdef CONFIG_ZB_CONFIG_APPLICATION_LARGE_NET
+#define ZB_CONFIG_APPLICATION_LARGE_NET
 #endif
 
 #endif /* ZB_CONFIG_DEFAULT_KERNEL_DEFINITION */
@@ -398,6 +424,10 @@
 /* Enable sleepy behaviour on all devices. The sleep signal will allow other, lower-priority task to take over. */
 #ifdef CONFIG_ZB_USE_SLEEP
 #define ZB_USE_SLEEP
+#else
+/* Suppress the End Device sleep default in zb_config.h so that Kconfig stays
+ * authoritative for ZB_ED_ROLE builds too. */
+#define ZB_NO_USE_SLEEP
 #endif
 
 /* Enter TX mode directly from radio sleep sate. */
@@ -447,5 +477,9 @@
 
 /* Send beacon immediately according to R23 spec */
 #define ZB_SEND_BEACON_IMMEDIATELY
+
+#ifdef ZB_NCS_NO_DEBUG_BUFFERS
+#undef ZB_DEBUG_BUFFERS
+#endif
 
 #endif /* ZB_VENDOR_H__ */

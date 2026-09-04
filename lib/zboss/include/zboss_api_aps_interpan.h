@@ -195,7 +195,7 @@ void zb_af_interpan_set_data_indication(zb_af_inter_pan_handler_t cb);
   *
   * Assumes buffer contains data in its main part, and INTRP-DATA.request parameters in buffer's
   * parameter (represented as @ref zb_intrp_data_req_s structure).
-  * @param param - reference (index) of the packet buffer.
+  * @param cb_param - reference (index) of the packet buffer.
   * @see SE spec, subclause B.5.1.
   */
 void zb_intrp_data_request(zb_cb_param_t cb_param);
