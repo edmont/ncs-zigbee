@@ -2457,7 +2457,11 @@ exponent.
 
 #ifdef ZB_ED_ROLE
 #ifndef ZB_MACSPLIT_HOST
+/* A vendor config may suppress the End Device sleep default by defining
+ * ZB_NO_USE_SLEEP, so that sleep stays under application control. */
+#ifndef ZB_NO_USE_SLEEP
 #define ZB_USE_SLEEP
+#endif
 #endif
 #endif
 

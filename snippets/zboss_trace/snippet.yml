@@ -1,0 +1,13 @@
+#
+# Copyright (c) 2026 Nordic Semiconductor
+#
+# SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+#
+
+name: zboss_trace
+append:
+  EXTRA_CONF_FILE: zboss_trace.conf
+boards:
+  nrf52840dk/nrf52840:
+    append:
+      EXTRA_DTC_OVERLAY_FILE: boards/nrf52840dk_nrf52840.overlay

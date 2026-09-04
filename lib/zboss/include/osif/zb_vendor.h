@@ -365,6 +365,10 @@
 /* Enable sleepy behaviour on all devices. The sleep signal will allow other, lower-priority task to take over. */
 #ifdef CONFIG_ZB_USE_SLEEP
 #define ZB_USE_SLEEP
+#else
+/* Suppress the End Device sleep default in zb_config.h so that Kconfig stays
+ * authoritative for ZB_ED_ROLE builds too. */
+#define ZB_NO_USE_SLEEP
 #endif
 
 /* Enter TX mode directly from radio sleep sate. */

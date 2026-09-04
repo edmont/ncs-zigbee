@@ -308,6 +308,12 @@ zb_ret_t zigbee_default_signal_handler(zb_cb_param_t param)
 			zb_zcl_set_backward_compatible_statuses_mode(ZB_ZCL_STATUSES_ZCL8_MODE));
 		stack_initialised = true;
 		LOG_INF("Zigbee stack initialized");
+#if defined(CONFIG_ZIGBEE_ROLE_COORDINATOR)
+		/* ZBOSS 5 sets high-security TC policy (install codes required) when
+		 * the coordinator role is configured. Samples join without IC tables.
+		 */
+		zb_set_installcode_policy(ZB_INSTALL_CODE_NOT_REQUIRED);
+#endif
 		ZB_SCHEDULE_APP_CALLBACK(skip_startup_continue, 0);
 		break;
 
