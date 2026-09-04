@@ -64,7 +64,6 @@ zephyr_interface_library_named(zboss)
 # Common includes, not related to ZBOSS source code.
 target_include_directories(zboss INTERFACE
   src/zb_error
-  include/addons
 )
 
 # Suppress bitfield compatibility warning.
@@ -125,9 +124,11 @@ if ((NOT DEFINED CONFIG_ZBOSS_SOURCES_AVAILABLE) OR
   # Extend ZBOSS interface libraries by headers placed in libraries folder.
   target_include_directories(zboss INTERFACE
     include
+    include/addons
     include/zcl
     include/ha
     include/se
+    include/zll
     include/osif
   )
 
