@@ -24,7 +24,7 @@
 	ZIGBEE_SETTINGS_SUBSYS_NAME "/" ZIGBEE_SETTINGS_KEY_SCENES_TABLE
 
 #if defined(CONFIG_SETTINGS)
-/** Initialize the Settings backend shared by add-on libraries and PSA storage. */
+/** Initialize the Settings backend shared by add-on libraries. */
 int zigbee_settings_subsys_init(void);
 #endif
 
