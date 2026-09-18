@@ -1,0 +1,1 @@
+/home/edmo-nordic/repos/ncs/platform_ncs/include/zb_vendor.h

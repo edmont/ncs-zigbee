@@ -62,6 +62,7 @@ endfunction()
 zephyr_interface_library_named(zboss)
 
 # Common includes, not related to ZBOSS source code.
+# include/addons: Nordic-maintained headers (not part of ZOI ZBOSS tree).
 target_include_directories(zboss INTERFACE
   src/zb_error
   include/addons
@@ -128,6 +129,7 @@ if ((NOT DEFINED CONFIG_ZBOSS_SOURCES_AVAILABLE) OR
     include/zcl
     include/ha
     include/se
+    include/zll
     include/osif
   )
 
@@ -159,12 +161,14 @@ if ((NOT DEFINED CONFIG_ZBOSS_SOURCES_AVAILABLE) OR
   target_link_libraries(zboss INTERFACE ${ZBOSS_LIB_PATH}/libzboss${LIB_VARIANT}.a)
   target_compile_definitions(zboss INTERFACE LIBZBOSS_CONFIG_FILE="${_zboss_lib_cfg}")
 
-  # Include the selected subset of Zigbee Green Power functionalities
+  # Include the selected subset of Zigbee Green Power functionalities.
+  # GP Combo (CONFIG_ZIGBEE_GP_CB) is source-build only; see platform_ncs.
   if (CONFIG_ZIGBEE_ROLE_COORDINATOR OR CONFIG_ZIGBEE_ROLE_ROUTER)
     if (CONFIG_ZIGBEE_GP_PB)
       target_link_libraries(zboss INTERFACE ${ZBOSS_LIB_PATH}/libgppb${LIB_VARIANT}.a)
     elseif (CONFIG_ZIGBEE_GP_CB)
-      target_link_libraries(zboss INTERFACE ${ZBOSS_LIB_PATH}/libgpcb${LIB_VARIANT}.a)
+      message(FATAL_ERROR
+        "CONFIG_ZIGBEE_GP_CB requires CONFIG_ZBOSS_LIBRARY_SOURCES (no prebuilt libgpcb).")
     else()
       message( FATAL_ERROR "Unsupported Zigbee Green Power feature set")
     endif()
