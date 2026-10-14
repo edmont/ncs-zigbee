@@ -87,6 +87,38 @@ static zb_nwk_device_type_t default_role = ZB_NWK_DEVICE_TYPE_ROUTER;
 static zb_nwk_device_type_t default_role = ZB_NWK_DEVICE_TYPE_ED;
 #endif
 
+#if defined(ZB_BDB_MODE) && !defined(BDB_OLD)
+static zb_uint8_t shell_bdb_pending_mode_mask;
+
+static void shell_bdb_retry_commissioning(zb_cb_param_t param)
+{
+	ZVUNUSED(param);
+
+	(void)bdb_start_top_level_commissioning(shell_bdb_pending_mode_mask);
+}
+
+static void shell_bdb_cancel_commissioning(zb_cb_param_t param)
+{
+	if (param == ZB_UNDEFINED_BUFFER) {
+		zb_buf_get_out_delayed(shell_bdb_cancel_commissioning);
+		return;
+	}
+
+#ifndef ZB_ED_ROLE
+	if (default_role == ZB_NWK_DEVICE_TYPE_COORDINATOR) {
+		bdb_cancel_formation((zb_bufid_t)param);
+	} else {
+		bdb_cancel_joining((zb_bufid_t)param);
+	}
+#else
+	bdb_cancel_joining((zb_bufid_t)param);
+#endif
+
+	ZB_SCHEDULE_APP_ALARM(shell_bdb_retry_commissioning, 0,
+			      ZB_MILLISECONDS_TO_BEACON_INTERVAL(500));
+}
+#endif /* ZB_BDB_MODE && !BDB_OLD */
+
 /**@brief Get Zigbee role set for the device.
  *
  * @return Zigbee role already set or role planned to set if stack is not yet started.
@@ -330,10 +362,20 @@ static int cmd_zb_start(const struct shell *shell, size_t argc, char **argv)
 	if (ret) {
 		zb_shell_print_done(shell, ZB_FALSE);
 		return 0;
-	} else {
-		zb_shell_print_error(shell, "Could not start top level commissioning", ZB_FALSE);
-		return -ENOEXEC;
 	}
+
+#if defined(ZB_BDB_MODE) && !defined(BDB_OLD)
+	if (zigbee_is_stack_started() && !ZB_JOINED()) {
+		shell_bdb_pending_mode_mask = mode_mask;
+		shell_warn(shell, "Restarting commissioning (cancel in-progress procedure)");
+		zb_buf_get_out_delayed(shell_bdb_cancel_commissioning);
+		zb_shell_print_done(shell, ZB_FALSE);
+		return 0;
+	}
+#endif
+
+	zb_shell_print_error(shell, "Could not start top level commissioning", ZB_FALSE);
+	return -ENOEXEC;
 }
 
 /**@brief Set or get the Zigbee Extended Pan ID value.
