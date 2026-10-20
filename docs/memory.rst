@@ -73,8 +73,9 @@ The following table lists the available files, which targets they cover, and whe
        | nRF5340 DK (DK only)
        | nRF54L10 DK (DK only)
        | nRF54L15 DK (DK only)
+       | nRF54LC10 DK (DK only)
        | nRF54LM20 DK (DK only)
-     - Keeps the primary image on internal flash and places the secondary upgrade slot (``slot1_partition``) on external flash.
+     - Keeps the primary image on internal flash and places the secondary upgrade slot (``slot1_partition``) on external flash, except on the nRF54LC10 DK where both slots are in internal RRAM.
        Adds ``boot_partition`` (MCUboot) and resizes ``slot0_partition`` to fit.
        On the nRF5340 DK, external flash can also hold ``image-3``.
        Reference layout for :ref:`lib_zigbee_fota` over external flash.
