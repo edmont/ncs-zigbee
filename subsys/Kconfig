@@ -158,7 +158,7 @@ config ZBOSS_DEFAULT_THREAD_PRIORITY
 
 config ZBOSS_DEFAULT_THREAD_STACK_SIZE
 	int "Stack size of ZBOSS Zephyr task"
-	default 5120
+	default 2560
 	help
 	  Stack size of ZBOSS Zephyr task. This is the task zboss_main_loop_iteration is called from.
 
