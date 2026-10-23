@@ -233,12 +233,18 @@ Stack memory requirements
 *************************
 
 The following tables and bar charts list stack memory requirement values for ``main`` and ``zboss`` threads.
-These measurements were carried out with Zephyr's `Thread analyzer`_, using the following Kconfig options for configuration:
+Usage figures are the **maximum** observed during Zigbee integration tests on hardware, with Zephyr's `Thread analyzer`_ enabled on profiling builds.
+Each sample configures stacks in Kconfig to at least **10%** above that peak, rounded up to a **128-byte** multiple:
 
-* For the stack memory size of the ``main`` thread - ``CONFIG_MAIN_STACK_SIZE``
-* For the stack memory size of the ``zboss`` thread - ``CONFIG_ZBOSS_DEFAULT_THREAD_STACK_SIZE``
+* ``CONFIG_MAIN_STACK_SIZE`` - ``main`` thread stack size
+* ``CONFIG_ZBOSS_DEFAULT_THREAD_STACK_SIZE`` - ``zboss`` thread stack size
 
-Values are provided in bytes (B).
+Tables show **stack usage** (peak bytes used) and **stack size** (configured allocation) per sample.
+Chart bar lengths use one byte scale per board and thread: total bar width reflects configured stack size, and the colored **used** segment length reflects peak usage, so samples are comparable within each column.
+Stack charts and tables list only samples that have integration-test stack measurements in ``docs/data/memory/<board>.yaml`` (a ``stack`` block per sample).
+Variants without profiling data are omitted from stack views but still appear in flash/RAM memory tables when applicable.
+Values are in bytes (B).
+nRF52833 and nRF54L05 are omitted (same layout as other boards; no integration stack data in CI).
 
 .. tabs::
 
@@ -253,12 +259,26 @@ Values are provided in bytes (B).
             .. stack-board::
                :board: nrf52840
 
+         .. group-tab:: nRF52840 Dongle
+
+            Stack usage for samples running on the `nRF52840 Dongle DK <Board support_>`_  (`nrf52840dongle`_).
+
+            .. stack-board::
+               :board: nrf52840_dongle
+
          .. group-tab:: nRF5340
 
             Stack usage for samples running on the `nRF5340 DK <Board support_>`_ (`nrf5340dk`_).
 
             .. stack-board::
                :board: nrf5340
+
+         .. group-tab:: nRF54L10
+
+            Stack usage for samples running on the `nRF54L10 emulation on the nRF54L15 DK <Board support_>`_ (`nrf54l15dk`_).
+
+            .. stack-board::
+               :board: nrf54l10
 
          .. group-tab:: nRF54L15
 
@@ -285,12 +305,26 @@ Values are provided in bytes (B).
             .. stack-table::
                :board: nrf52840
 
+         .. group-tab:: nRF52840 Dongle
+
+            The following table lists stack usage for samples running on the `nRF52840 Dongle DK <Board support_>`_  (`nrf52840dongle`_).
+
+            .. stack-table::
+               :board: nrf52840_dongle
+
          .. group-tab:: nRF5340
 
             The following table lists stack usage for samples running on the `nRF5340 DK <Board support_>`_ (`nrf5340dk`_).
 
             .. stack-table::
                :board: nrf5340
+
+         .. group-tab:: nRF54L10
+
+            The following table lists stack usage for samples running on the `nRF54L10 emulation on the nRF54L15 DK <Board support_>`_ (`nrf54l15dk`_).
+
+            .. stack-table::
+               :board: nrf54l10
 
          .. group-tab:: nRF54L15
 

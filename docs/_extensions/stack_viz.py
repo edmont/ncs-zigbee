@@ -29,12 +29,22 @@ THREAD_COLORS = {
 
 
 def _b_label(value_b: int) -> str:
-    return f"{value_b} B"
+    # Narrow no-break space before B avoids doc theme byte→kB auto-formatting (e.g. "1280 B" → "12 kB B").
+    return f"{value_b}\u202fB"
 
 
-def _render_thread_bar(thread_id: str, label: str, used_b: int, size_b: int) -> str:
+def _render_thread_bar(
+    thread_id: str,
+    label: str,
+    used_b: int,
+    size_b: int,
+    max_size_b: int,
+) -> str:
+    """Render a stack bar on a board-wide byte scale (max_size_b per thread column)."""
     used_color, free_color = THREAD_COLORS[thread_id]
-    used_pct = min(100.0, 100.0 * used_b / size_b) if size_b else 0
+    scale_b = max_size_b if max_size_b > 0 else size_b
+    bar_width_pct = min(100.0, 100.0 * size_b / scale_b) if scale_b else 100.0
+    used_pct = min(100.0, 100.0 * used_b / size_b) if size_b else 0.0
     free_pct = 100.0 - used_pct
     free_b = max(size_b - used_b, 0)
     title = (
@@ -48,7 +58,9 @@ def _render_thread_bar(thread_id: str, label: str, used_b: int, size_b: int) -> 
         f'style="width:{free_pct:.2f}%;background:{free_color}"></span>'
     )
     return (
-        f'<div class="memory-viz-bar" role="img" aria-label="{html.escape(label, quote=True)}">'
+        f'<div class="memory-viz-bar stack-viz-thread-bar" role="img" '
+        f'aria-label="{html.escape(label, quote=True)}" '
+        f'style="width:{bar_width_pct:.4f}%">'
         f'<div class="memory-viz-segment memory-viz-segment-{thread_id}" '
         f'style="flex:1 1 100%" '
         f'data-tooltip="{html.escape(title, quote=True)}">'
@@ -153,6 +165,7 @@ def _build_board_nodes(directive: SphinxDirective, board: str) -> nodes.Element:
                 "main thread",
                 int(stack["main"]["used_b"]),
                 int(stack["main"]["size_b"]),
+                main_size_b,
             )
             + "</div>",
             format="html",
@@ -165,6 +178,7 @@ def _build_board_nodes(directive: SphinxDirective, board: str) -> nodes.Element:
                 "zboss thread",
                 int(stack["zboss"]["used_b"]),
                 int(stack["zboss"]["size_b"]),
+                zboss_size_b,
             )
             + "</div>",
             format="html",

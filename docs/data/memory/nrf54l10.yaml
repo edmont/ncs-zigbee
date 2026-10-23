@@ -61,18 +61,39 @@ samples:
       nvm:
         slot0: 362
       ram_used_kb: 73
+    stack:
+      main:
+        used_b: 868
+        size_b: 1280
+      zboss:
+        used_b: 1904
+        size_b: 2944
   - label: ':ref:`Light bulb <zigbee_light_bulb_sample>`'
     layout: base
     usage:
       nvm:
         slot0: 387
       ram_used_kb: 53
+    stack:
+      main:
+        used_b: 876
+        size_b: 1280
+      zboss:
+        used_b: 2528
+        size_b: 3328
   - label: ':ref:`Light switch <zigbee_light_switch_sample>`'
     layout: base
     usage:
       nvm:
         slot0: 294
       ram_used_kb: 43
+    stack:
+      main:
+        used_b: 868
+        size_b: 1280
+      zboss:
+        used_b: 2392
+        size_b: 3200
   - label: ':ref:`Light switch <zigbee_light_switch_sample>` with :ref:`lib_zigbee_fota`'
     layout: ext_flash
     usage:
@@ -82,6 +103,13 @@ samples:
       ram_used_kb: 46
       external:
         slot1_ext: 190
+    stack:
+      main:
+        used_b: 932
+        size_b: 1280
+      zboss:
+        used_b: 2392
+        size_b: 3200
   - label: ':ref:`Light switch <zigbee_light_switch_sample>` with :ref:`zigbee_light_switch_sample_nus`'
     layout: base
     usage:

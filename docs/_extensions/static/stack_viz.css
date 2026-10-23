@@ -64,6 +64,17 @@
   border-bottom: none;
 }
 
+.stack-viz-board .memory-viz-bar-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.stack-viz-board .stack-viz-thread-bar {
+  flex: 0 0 auto;
+  max-width: 100%;
+}
+
 .stack-viz-sample-row > .memory-viz-sample-label {
   margin: 0;
   width: 100%;
