@@ -1,0 +1,146 @@
+{
+  "meta": {
+    "source": "/home/edmo-nordic/Downloads/333-archive",
+    "format": "board_id -> sample_key -> thread_name -> {used_b, size_b, unused_b}",
+    "excluded_threads": [
+      "thread_analyzer (profiling only)"
+    ],
+    "board_id": "nrf54l15",
+    "platform": "nrf54l15dk_nrf54l15_cpuapp"
+  },
+  "samples": {
+    "light_bulb": {
+      "zboss": {
+        "used_b": 2776,
+        "size_b": 3328,
+        "unused_b": 552
+      },
+      "ISR0": {
+        "used_b": 536,
+        "size_b": 2048,
+        "unused_b": 1512
+      },
+      "sysworkq": {
+        "used_b": 216,
+        "size_b": 2048,
+        "unused_b": 1832
+      },
+      "main": {
+        "used_b": 792,
+        "size_b": 1280,
+        "unused_b": 488
+      },
+      "MPSL Work": {
+        "used_b": 316,
+        "size_b": 1024,
+        "unused_b": 708
+      },
+      "idle": {
+        "used_b": 48,
+        "size_b": 384,
+        "unused_b": 336
+      }
+    },
+    "light_switch": {
+      "zboss": {
+        "used_b": 2640,
+        "size_b": 3200,
+        "unused_b": 560
+      },
+      "ISR0": {
+        "used_b": 592,
+        "size_b": 2048,
+        "unused_b": 1456
+      },
+      "sysworkq": {
+        "used_b": 216,
+        "size_b": 2048,
+        "unused_b": 1832
+      },
+      "main": {
+        "used_b": 784,
+        "size_b": 1280,
+        "unused_b": 496
+      },
+      "MPSL Work": {
+        "used_b": 324,
+        "size_b": 1024,
+        "unused_b": 700
+      },
+      "idle": {
+        "used_b": 48,
+        "size_b": 384,
+        "unused_b": 336
+      }
+    },
+    "network_coordinator": {
+      "zboss": {
+        "used_b": 2080,
+        "size_b": 2944,
+        "unused_b": 864
+      },
+      "ISR0": {
+        "used_b": 632,
+        "size_b": 2048,
+        "unused_b": 1416
+      },
+      "sysworkq": {
+        "used_b": 216,
+        "size_b": 2048,
+        "unused_b": 1832
+      },
+      "main": {
+        "used_b": 784,
+        "size_b": 1280,
+        "unused_b": 496
+      },
+      "MPSL Work": {
+        "used_b": 316,
+        "size_b": 1024,
+        "unused_b": 708
+      },
+      "idle": {
+        "used_b": 48,
+        "size_b": 384,
+        "unused_b": 336
+      }
+    },
+    "shell": {
+      "zboss": {
+        "used_b": 2408,
+        "size_b": 2944,
+        "unused_b": 536
+      },
+      "ISR0": {
+        "used_b": 616,
+        "size_b": 2048,
+        "unused_b": 1432
+      },
+      "shell_uart": {
+        "used_b": 984,
+        "size_b": 2048,
+        "unused_b": 1064
+      },
+      "sysworkq": {
+        "used_b": 232,
+        "size_b": 2048,
+        "unused_b": 1816
+      },
+      "logging": {
+        "used_b": 360,
+        "size_b": 1024,
+        "unused_b": 664
+      },
+      "MPSL Work": {
+        "used_b": 316,
+        "size_b": 1024,
+        "unused_b": 708
+      },
+      "idle": {
+        "used_b": 48,
+        "size_b": 384,
+        "unused_b": 336
+      }
+    }
+  }
+}

@@ -58,11 +58,7 @@ samples:
   - label: ':ref:`NCP <zigbee_ncp_sample>`'
     not_applicable: true
   - label: ':ref:`NCP with USB transport <zigbee_ncp_sample>`'
-    layout: base
-    usage:
-      nvm:
-        slot0: 409
-      ram_used_kb: 97
+    not_applicable: true
   - label: ':ref:`Zigbee application template <zigbee_template_sample>`'
     not_applicable: true
   - label: ':ref:`Zigbee shell <zigbee_shell_sample>`'
@@ -71,5 +67,9 @@ samples:
     layout: base
     usage:
       nvm:
-        slot0: 469
-      ram_used_kb: 86
+        slot0: 510
+      ram_used_kb: 89
+    stack:
+      zboss:
+        used_b: 2088
+        size_b: 2944

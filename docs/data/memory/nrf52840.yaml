@@ -73,86 +73,99 @@ samples:
     layout: base
     usage:
       nvm:
-        slot0: 367
-      ram_used_kb: 72
+        slot0: 408
+      ram_used_kb: 75
     stack:
       main:
-        used_b: 780
-        size_b: 2048
+        used_b: 808
+        size_b: 1280
       zboss:
-        used_b: 1488
-        size_b: 5120
+        used_b: 2080
+        size_b: 2944
   - label: ':ref:`Light bulb <zigbee_light_bulb_sample>`'
     layout: base
     usage:
       nvm:
-        slot0: 391
-      ram_used_kb: 52
+        slot0: 426
+      ram_used_kb: 55
     stack:
       main:
-        used_b: 804
-        size_b: 2048
+        used_b: 808
+        size_b: 1280
       zboss:
-        used_b: 1488
-        size_b: 5120
+        used_b: 2776
+        size_b: 3328
   - label: ':ref:`Light switch <zigbee_light_switch_sample>`'
     layout: base
     usage:
       nvm:
-        slot0: 300
-      ram_used_kb: 42
+        slot0: 336
+      ram_used_kb: 45
     stack:
       main:
-        used_b: 772
-        size_b: 2048
+        used_b: 784
+        size_b: 1280
       zboss:
-        used_b: 1472
-        size_b: 5120
+        used_b: 2640
+        size_b: 3200
   - label: ':ref:`Light switch <zigbee_light_switch_sample>` with :ref:`lib_zigbee_fota`'
     layout: ext_flash
     usage:
       nvm:
         boot: 33
-        slot0: 323
-      ram_used_kb: 46
+        slot0: 355
+      ram_used_kb: 48
       external:
-        slot1_ext: 193
+        slot1_ext: 210
+    stack:
+      main:
+        used_b: 848
+        size_b: 1280
+      zboss:
+        used_b: 2640
+        size_b: 3200
   - label: ':ref:`Light switch <zigbee_light_switch_sample>` with :ref:`zigbee_light_switch_sample_nus`'
     layout: base
     usage:
       nvm:
-        slot0: 421
-      ram_used_kb: 59
+        slot0: 453
+      ram_used_kb: 62
+    stack:
+      main:
+        used_b: 960
+        size_b: 1280
+      zboss:
+        used_b: 2640
+        size_b: 3200
   - label: ':ref:`Light switch <zigbee_light_switch_sample>` with :ref:`zigbee_light_switch_sample_nus` and :ref:`lib_zigbee_fota`'
     not_applicable: true
   - label: ':ref:`NCP <zigbee_ncp_sample>`'
-    layout: base
-    usage:
-      nvm:
-        slot0: 388
-      ram_used_kb: 90
+    not_applicable: true
   - label: ':ref:`NCP with USB transport <zigbee_ncp_sample>`'
-    layout: mcuboot_usb
-    usage:
-      nvm:
-        boot: 58
-        slot0: 414
-      ram_used_kb: 98
+    not_applicable: true
   - label: ':ref:`Zigbee application template <zigbee_template_sample>`'
     layout: base
     usage:
       nvm:
-        slot0: 367
-      ram_used_kb: 62
+        slot0: 407
+      ram_used_kb: 65
   - label: ':ref:`Zigbee shell <zigbee_shell_sample>`'
     layout: base
     usage:
       nvm:
-        slot0: 448
-      ram_used_kb: 78
+        slot0: 488
+      ram_used_kb: 81
+    stack:
+      zboss:
+        used_b: 2408
+        size_b: 2944
   - label: ':ref:`Zigbee shell over USB <zigbee_shell_sample>`'
     layout: base
     usage:
       nvm:
-        slot0: 473
-      ram_used_kb: 86
+        slot0: 513
+      ram_used_kb: 89
+    stack:
+      zboss:
+        used_b: 2088
+        size_b: 2944

@@ -1,0 +1,898 @@
+{
+  "meta": {
+    "source": "/home/edmo-nordic/Downloads/333-archive",
+    "format": "board_id -> sample_key -> thread_name -> {used_b, size_b, unused_b}",
+    "excluded_threads": [
+      "thread_analyzer (profiling only)"
+    ]
+  },
+  "boards": {
+    "nrf52840": {
+      "light_bulb": {
+        "zboss": {
+          "used_b": 2776,
+          "size_b": 3328,
+          "unused_b": 552
+        },
+        "ISR0": {
+          "used_b": 640,
+          "size_b": 2048,
+          "unused_b": 1408
+        },
+        "sysworkq": {
+          "used_b": 216,
+          "size_b": 2048,
+          "unused_b": 1832
+        },
+        "main": {
+          "used_b": 792,
+          "size_b": 1280,
+          "unused_b": 488
+        },
+        "MPSL Work": {
+          "used_b": 316,
+          "size_b": 1024,
+          "unused_b": 708
+        },
+        "idle": {
+          "used_b": 48,
+          "size_b": 384,
+          "unused_b": 336
+        }
+      },
+      "light_switch": {
+        "zboss": {
+          "used_b": 2640,
+          "size_b": 3200,
+          "unused_b": 560
+        },
+        "ISR0": {
+          "used_b": 552,
+          "size_b": 2048,
+          "unused_b": 1496
+        },
+        "sysworkq": {
+          "used_b": 256,
+          "size_b": 2048,
+          "unused_b": 1792
+        },
+        "main": {
+          "used_b": 784,
+          "size_b": 1280,
+          "unused_b": 496
+        },
+        "MPSL Work": {
+          "used_b": 324,
+          "size_b": 1024,
+          "unused_b": 700
+        },
+        "idle": {
+          "used_b": 48,
+          "size_b": 384,
+          "unused_b": 336
+        }
+      },
+      "light_switch_nus": {
+        "zboss": {
+          "used_b": 2640,
+          "size_b": 3200,
+          "unused_b": 560
+        },
+        "BT RX WQ": {
+          "used_b": 520,
+          "size_b": 2304,
+          "unused_b": 1784
+        },
+        "ISR0": {
+          "used_b": 524,
+          "size_b": 2048,
+          "unused_b": 1524
+        },
+        "sysworkq": {
+          "used_b": 280,
+          "size_b": 2048,
+          "unused_b": 1768
+        },
+        "BT LW WQ": {
+          "used_b": 504,
+          "size_b": 1920,
+          "unused_b": 1416
+        },
+        "main": {
+          "used_b": 960,
+          "size_b": 1280,
+          "unused_b": 320
+        },
+        "MPSL Work": {
+          "used_b": 384,
+          "size_b": 1024,
+          "unused_b": 640
+        },
+        "bt_tx_processor": {
+          "used_b": 372,
+          "size_b": 768,
+          "unused_b": 396
+        },
+        "idle": {
+          "used_b": 48,
+          "size_b": 384,
+          "unused_b": 336
+        }
+      },
+      "network_coordinator": {
+        "zboss": {
+          "used_b": 2080,
+          "size_b": 2944,
+          "unused_b": 864
+        },
+        "ISR0": {
+          "used_b": 632,
+          "size_b": 2048,
+          "unused_b": 1416
+        },
+        "sysworkq": {
+          "used_b": 216,
+          "size_b": 2048,
+          "unused_b": 1832
+        },
+        "main": {
+          "used_b": 808,
+          "size_b": 1280,
+          "unused_b": 472
+        },
+        "MPSL Work": {
+          "used_b": 316,
+          "size_b": 1024,
+          "unused_b": 708
+        },
+        "idle": {
+          "used_b": 48,
+          "size_b": 384,
+          "unused_b": 336
+        }
+      },
+      "shell": {
+        "zboss": {
+          "used_b": 2408,
+          "size_b": 2944,
+          "unused_b": 536
+        },
+        "ISR0": {
+          "used_b": 536,
+          "size_b": 2048,
+          "unused_b": 1512
+        },
+        "shell_uart": {
+          "used_b": 984,
+          "size_b": 2048,
+          "unused_b": 1064
+        },
+        "sysworkq": {
+          "used_b": 240,
+          "size_b": 2048,
+          "unused_b": 1808
+        },
+        "logging": {
+          "used_b": 376,
+          "size_b": 1024,
+          "unused_b": 648
+        },
+        "MPSL Work": {
+          "used_b": 316,
+          "size_b": 1024,
+          "unused_b": 708
+        },
+        "idle": {
+          "used_b": 48,
+          "size_b": 384,
+          "unused_b": 336
+        }
+      },
+      "shell_usb": {
+        "zboss": {
+          "used_b": 2088,
+          "size_b": 2944,
+          "unused_b": 856
+        },
+        "ISR0": {
+          "used_b": 616,
+          "size_b": 2048,
+          "unused_b": 1432
+        },
+        "shell_uart": {
+          "used_b": 1008,
+          "size_b": 2048,
+          "unused_b": 1040
+        },
+        "sysworkq": {
+          "used_b": 336,
+          "size_b": 2048,
+          "unused_b": 1712
+        },
+        "logging": {
+          "used_b": 360,
+          "size_b": 1024,
+          "unused_b": 664
+        },
+        "MPSL Work": {
+          "used_b": 324,
+          "size_b": 1024,
+          "unused_b": 700
+        },
+        "usbd": {
+          "used_b": 352,
+          "size_b": 1024,
+          "unused_b": 672
+        },
+        "udc_nrfx": {
+          "used_b": 304,
+          "size_b": 512,
+          "unused_b": 208
+        },
+        "idle": {
+          "used_b": 48,
+          "size_b": 384,
+          "unused_b": 336
+        }
+      }
+    },
+    "nrf52840_dongle": {
+      "light_bulb": {
+        "zboss": {
+          "used_b": 2776,
+          "size_b": 3328,
+          "unused_b": 552
+        },
+        "ISR0": {
+          "used_b": 544,
+          "size_b": 2048,
+          "unused_b": 1504
+        },
+        "sysworkq": {
+          "used_b": 216,
+          "size_b": 2048,
+          "unused_b": 1832
+        },
+        "main": {
+          "used_b": 792,
+          "size_b": 1280,
+          "unused_b": 488
+        },
+        "MPSL Work": {
+          "used_b": 316,
+          "size_b": 1024,
+          "unused_b": 708
+        },
+        "idle": {
+          "used_b": 48,
+          "size_b": 384,
+          "unused_b": 336
+        }
+      },
+      "shell": {
+        "zboss": {
+          "used_b": 2408,
+          "size_b": 2944,
+          "unused_b": 536
+        },
+        "ISR0": {
+          "used_b": 524,
+          "size_b": 2048,
+          "unused_b": 1524
+        },
+        "shell_uart": {
+          "used_b": 1000,
+          "size_b": 2048,
+          "unused_b": 1048
+        },
+        "sysworkq": {
+          "used_b": 232,
+          "size_b": 2048,
+          "unused_b": 1816
+        },
+        "logging": {
+          "used_b": 376,
+          "size_b": 1024,
+          "unused_b": 648
+        },
+        "MPSL Work": {
+          "used_b": 316,
+          "size_b": 1024,
+          "unused_b": 708
+        },
+        "idle": {
+          "used_b": 48,
+          "size_b": 384,
+          "unused_b": 336
+        }
+      }
+    },
+    "nrf5340": {
+      "light_bulb": {
+        "zboss": {
+          "used_b": 2776,
+          "size_b": 3328,
+          "unused_b": 552
+        },
+        "ISR0": {
+          "used_b": 544,
+          "size_b": 2048,
+          "unused_b": 1504
+        },
+        "sysworkq": {
+          "used_b": 216,
+          "size_b": 2048,
+          "unused_b": 1832
+        },
+        "main": {
+          "used_b": 792,
+          "size_b": 1280,
+          "unused_b": 488
+        },
+        "MPSL Work": {
+          "used_b": 316,
+          "size_b": 1024,
+          "unused_b": 708
+        },
+        "idle": {
+          "used_b": 48,
+          "size_b": 384,
+          "unused_b": 336
+        }
+      },
+      "light_switch": {
+        "zboss": {
+          "used_b": 2640,
+          "size_b": 3200,
+          "unused_b": 560
+        },
+        "ISR0": {
+          "used_b": 624,
+          "size_b": 2048,
+          "unused_b": 1424
+        },
+        "sysworkq": {
+          "used_b": 216,
+          "size_b": 2048,
+          "unused_b": 1832
+        },
+        "main": {
+          "used_b": 784,
+          "size_b": 1280,
+          "unused_b": 496
+        },
+        "MPSL Work": {
+          "used_b": 324,
+          "size_b": 1024,
+          "unused_b": 700
+        },
+        "idle": {
+          "used_b": 48,
+          "size_b": 384,
+          "unused_b": 336
+        }
+      },
+      "network_coordinator": {
+        "zboss": {
+          "used_b": 2080,
+          "size_b": 2944,
+          "unused_b": 864
+        },
+        "ISR0": {
+          "used_b": 632,
+          "size_b": 2048,
+          "unused_b": 1416
+        },
+        "sysworkq": {
+          "used_b": 216,
+          "size_b": 2048,
+          "unused_b": 1832
+        },
+        "main": {
+          "used_b": 784,
+          "size_b": 1280,
+          "unused_b": 496
+        },
+        "MPSL Work": {
+          "used_b": 316,
+          "size_b": 1024,
+          "unused_b": 708
+        },
+        "idle": {
+          "used_b": 48,
+          "size_b": 384,
+          "unused_b": 336
+        }
+      },
+      "shell": {
+        "zboss": {
+          "used_b": 2408,
+          "size_b": 2944,
+          "unused_b": 536
+        },
+        "ISR0": {
+          "used_b": 524,
+          "size_b": 2048,
+          "unused_b": 1524
+        },
+        "shell_uart": {
+          "used_b": 1000,
+          "size_b": 2048,
+          "unused_b": 1048
+        },
+        "sysworkq": {
+          "used_b": 232,
+          "size_b": 2048,
+          "unused_b": 1816
+        },
+        "logging": {
+          "used_b": 360,
+          "size_b": 1024,
+          "unused_b": 664
+        },
+        "MPSL Work": {
+          "used_b": 316,
+          "size_b": 1024,
+          "unused_b": 708
+        },
+        "idle": {
+          "used_b": 48,
+          "size_b": 384,
+          "unused_b": 336
+        }
+      }
+    },
+    "nrf54l10": {
+      "light_bulb": {
+        "zboss": {
+          "used_b": 2776,
+          "size_b": 3328,
+          "unused_b": 552
+        },
+        "ISR0": {
+          "used_b": 544,
+          "size_b": 2048,
+          "unused_b": 1504
+        },
+        "sysworkq": {
+          "used_b": 216,
+          "size_b": 2048,
+          "unused_b": 1832
+        },
+        "main": {
+          "used_b": 792,
+          "size_b": 1280,
+          "unused_b": 488
+        },
+        "MPSL Work": {
+          "used_b": 316,
+          "size_b": 1024,
+          "unused_b": 708
+        },
+        "idle": {
+          "used_b": 48,
+          "size_b": 384,
+          "unused_b": 336
+        }
+      },
+      "light_switch": {
+        "zboss": {
+          "used_b": 2640,
+          "size_b": 3200,
+          "unused_b": 560
+        },
+        "ISR0": {
+          "used_b": 608,
+          "size_b": 2048,
+          "unused_b": 1440
+        },
+        "sysworkq": {
+          "used_b": 216,
+          "size_b": 2048,
+          "unused_b": 1832
+        },
+        "main": {
+          "used_b": 784,
+          "size_b": 1280,
+          "unused_b": 496
+        },
+        "MPSL Work": {
+          "used_b": 324,
+          "size_b": 1024,
+          "unused_b": 700
+        },
+        "idle": {
+          "used_b": 48,
+          "size_b": 384,
+          "unused_b": 336
+        }
+      },
+      "network_coordinator": {
+        "zboss": {
+          "used_b": 2080,
+          "size_b": 2944,
+          "unused_b": 864
+        },
+        "ISR0": {
+          "used_b": 648,
+          "size_b": 2048,
+          "unused_b": 1400
+        },
+        "sysworkq": {
+          "used_b": 216,
+          "size_b": 2048,
+          "unused_b": 1832
+        },
+        "main": {
+          "used_b": 784,
+          "size_b": 1280,
+          "unused_b": 496
+        },
+        "MPSL Work": {
+          "used_b": 316,
+          "size_b": 1024,
+          "unused_b": 708
+        },
+        "idle": {
+          "used_b": 48,
+          "size_b": 384,
+          "unused_b": 336
+        }
+      },
+      "shell": {
+        "zboss": {
+          "used_b": 2408,
+          "size_b": 2944,
+          "unused_b": 536
+        },
+        "ISR0": {
+          "used_b": 616,
+          "size_b": 2048,
+          "unused_b": 1432
+        },
+        "shell_uart": {
+          "used_b": 984,
+          "size_b": 2048,
+          "unused_b": 1064
+        },
+        "sysworkq": {
+          "used_b": 232,
+          "size_b": 2048,
+          "unused_b": 1816
+        },
+        "logging": {
+          "used_b": 360,
+          "size_b": 1024,
+          "unused_b": 664
+        },
+        "MPSL Work": {
+          "used_b": 316,
+          "size_b": 1024,
+          "unused_b": 708
+        },
+        "idle": {
+          "used_b": 48,
+          "size_b": 384,
+          "unused_b": 336
+        }
+      }
+    },
+    "nrf54l15": {
+      "light_bulb": {
+        "zboss": {
+          "used_b": 2776,
+          "size_b": 3328,
+          "unused_b": 552
+        },
+        "ISR0": {
+          "used_b": 536,
+          "size_b": 2048,
+          "unused_b": 1512
+        },
+        "sysworkq": {
+          "used_b": 216,
+          "size_b": 2048,
+          "unused_b": 1832
+        },
+        "main": {
+          "used_b": 792,
+          "size_b": 1280,
+          "unused_b": 488
+        },
+        "MPSL Work": {
+          "used_b": 316,
+          "size_b": 1024,
+          "unused_b": 708
+        },
+        "idle": {
+          "used_b": 48,
+          "size_b": 384,
+          "unused_b": 336
+        }
+      },
+      "light_switch": {
+        "zboss": {
+          "used_b": 2640,
+          "size_b": 3200,
+          "unused_b": 560
+        },
+        "ISR0": {
+          "used_b": 592,
+          "size_b": 2048,
+          "unused_b": 1456
+        },
+        "sysworkq": {
+          "used_b": 216,
+          "size_b": 2048,
+          "unused_b": 1832
+        },
+        "main": {
+          "used_b": 784,
+          "size_b": 1280,
+          "unused_b": 496
+        },
+        "MPSL Work": {
+          "used_b": 324,
+          "size_b": 1024,
+          "unused_b": 700
+        },
+        "idle": {
+          "used_b": 48,
+          "size_b": 384,
+          "unused_b": 336
+        }
+      },
+      "network_coordinator": {
+        "zboss": {
+          "used_b": 2080,
+          "size_b": 2944,
+          "unused_b": 864
+        },
+        "ISR0": {
+          "used_b": 632,
+          "size_b": 2048,
+          "unused_b": 1416
+        },
+        "sysworkq": {
+          "used_b": 216,
+          "size_b": 2048,
+          "unused_b": 1832
+        },
+        "main": {
+          "used_b": 784,
+          "size_b": 1280,
+          "unused_b": 496
+        },
+        "MPSL Work": {
+          "used_b": 316,
+          "size_b": 1024,
+          "unused_b": 708
+        },
+        "idle": {
+          "used_b": 48,
+          "size_b": 384,
+          "unused_b": 336
+        }
+      },
+      "shell": {
+        "zboss": {
+          "used_b": 2408,
+          "size_b": 2944,
+          "unused_b": 536
+        },
+        "ISR0": {
+          "used_b": 616,
+          "size_b": 2048,
+          "unused_b": 1432
+        },
+        "shell_uart": {
+          "used_b": 984,
+          "size_b": 2048,
+          "unused_b": 1064
+        },
+        "sysworkq": {
+          "used_b": 232,
+          "size_b": 2048,
+          "unused_b": 1816
+        },
+        "logging": {
+          "used_b": 360,
+          "size_b": 1024,
+          "unused_b": 664
+        },
+        "MPSL Work": {
+          "used_b": 316,
+          "size_b": 1024,
+          "unused_b": 708
+        },
+        "idle": {
+          "used_b": 48,
+          "size_b": 384,
+          "unused_b": 336
+        }
+      }
+    },
+    "nrf54lm20": {
+      "light_bulb": {
+        "zboss": {
+          "used_b": 2968,
+          "size_b": 3328,
+          "unused_b": 360
+        },
+        "ISR0": {
+          "used_b": 664,
+          "size_b": 2048,
+          "unused_b": 1384
+        },
+        "sysworkq": {
+          "used_b": 216,
+          "size_b": 2048,
+          "unused_b": 1832
+        },
+        "main": {
+          "used_b": 884,
+          "size_b": 1280,
+          "unused_b": 396
+        },
+        "MPSL Work": {
+          "used_b": 340,
+          "size_b": 1024,
+          "unused_b": 684
+        },
+        "idle": {
+          "used_b": 48,
+          "size_b": 320,
+          "unused_b": 272
+        }
+      },
+      "light_switch": {
+        "zboss": {
+          "used_b": 2832,
+          "size_b": 3200,
+          "unused_b": 368
+        },
+        "ISR0": {
+          "used_b": 664,
+          "size_b": 2048,
+          "unused_b": 1384
+        },
+        "sysworkq": {
+          "used_b": 216,
+          "size_b": 2048,
+          "unused_b": 1832
+        },
+        "main": {
+          "used_b": 884,
+          "size_b": 1280,
+          "unused_b": 396
+        },
+        "MPSL Work": {
+          "used_b": 340,
+          "size_b": 1024,
+          "unused_b": 684
+        },
+        "idle": {
+          "used_b": 48,
+          "size_b": 384,
+          "unused_b": 336
+        }
+      },
+      "network_coordinator": {
+        "zboss": {
+          "used_b": 2576,
+          "size_b": 2944,
+          "unused_b": 368
+        },
+        "ISR0": {
+          "used_b": 664,
+          "size_b": 2048,
+          "unused_b": 1384
+        },
+        "sysworkq": {
+          "used_b": 216,
+          "size_b": 2048,
+          "unused_b": 1832
+        },
+        "main": {
+          "used_b": 884,
+          "size_b": 1280,
+          "unused_b": 396
+        },
+        "MPSL Work": {
+          "used_b": 348,
+          "size_b": 1024,
+          "unused_b": 676
+        },
+        "idle": {
+          "used_b": 48,
+          "size_b": 384,
+          "unused_b": 336
+        }
+      },
+      "shell": {
+        "zboss": {
+          "used_b": 2624,
+          "size_b": 2944,
+          "unused_b": 320
+        },
+        "ISR0": {
+          "used_b": 672,
+          "size_b": 2048,
+          "unused_b": 1376
+        },
+        "shell_uart": {
+          "used_b": 984,
+          "size_b": 2048,
+          "unused_b": 1064
+        },
+        "sysworkq": {
+          "used_b": 232,
+          "size_b": 2048,
+          "unused_b": 1816
+        },
+        "logging": {
+          "used_b": 360,
+          "size_b": 1024,
+          "unused_b": 664
+        },
+        "MPSL Work": {
+          "used_b": 340,
+          "size_b": 1024,
+          "unused_b": 684
+        },
+        "idle": {
+          "used_b": 48,
+          "size_b": 384,
+          "unused_b": 336
+        }
+      },
+      "shell_usb": {
+        "zboss": {
+          "used_b": 2632,
+          "size_b": 2944,
+          "unused_b": 312
+        },
+        "ISR0": {
+          "used_b": 680,
+          "size_b": 2048,
+          "unused_b": 1368
+        },
+        "shell_uart": {
+          "used_b": 944,
+          "size_b": 2048,
+          "unused_b": 1104
+        },
+        "sysworkq": {
+          "used_b": 224,
+          "size_b": 2048,
+          "unused_b": 1824
+        },
+        "logging": {
+          "used_b": 296,
+          "size_b": 1024,
+          "unused_b": 728
+        },
+        "MPSL Work": {
+          "used_b": 356,
+          "size_b": 1024,
+          "unused_b": 668
+        },
+        "usbd": {
+          "used_b": 376,
+          "size_b": 1024,
+          "unused_b": 648
+        },
+        "usbhs@20000": {
+          "used_b": 280,
+          "size_b": 512,
+          "unused_b": 232
+        },
+        "idle": {
+          "used_b": 48,
+          "size_b": 320,
+          "unused_b": 272
+        }
+      }
+    }
+  }
+}
