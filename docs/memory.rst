@@ -7,7 +7,7 @@ Memory requirements
    :local:
    :depth: 2
 
-This page provides information about the amount of flash memory and RAM that is required by the :ref:`zigbee_samples`, as well as stack memory requirements for ``main`` and ``zboss`` threads.
+This page provides information about the amount of flash memory and RAM that is required by the :ref:`zigbee_samples`, as well as stack memory requirements for Zephyr threads.
 Use it to check if your application has enough space for a given configuration.
 Values are provided for :ref:`ZBOSS libraries <zigbee_zboss>`.
 
@@ -149,7 +149,7 @@ Other NVM columns list the reserved partition size for that region.
 
          .. group-tab:: nRF54L10
 
-            Memory requirements for samples running on the `nRF54L10 emulation on the nRF54L15 DK <Board support_>`_ (`nrf54l15dk`_).
+            Memory requirements for samples running on the `nRF54L10 DK <Board support_>`_ (`nrf54l15dk`_).
 
             .. memory-board::
                :board: nrf54l10
@@ -209,7 +209,7 @@ Other NVM columns list the reserved partition size for that region.
 
          .. group-tab:: nRF54L10
 
-            The following table lists memory requirements for samples running on the `nRF54L10 emulation on the nRF54L15 DK <Board support_>`_ (`nrf54l15dk`_).
+            The following table lists memory requirements for samples running on the `nRF54L10 DK <Board support_>`_ (`nrf54l15dk`_).
 
             .. memory-table::
                :board: nrf54l10
@@ -232,13 +232,13 @@ Other NVM columns list the reserved partition size for that region.
 Stack memory requirements
 *************************
 
-The following tables and bar charts list stack memory requirement values for ``main`` and ``zboss`` threads.
-These measurements were carried out with Zephyr's `Thread analyzer`_, using the following Kconfig options for configuration:
-
-* For the stack memory size of the ``main`` thread - ``CONFIG_MAIN_STACK_SIZE``
-* For the stack memory size of the ``zboss`` thread - ``CONFIG_ZBOSS_DEFAULT_THREAD_STACK_SIZE``
-
-Values are provided in bytes (B).
+Stack tables and charts use integration-test profiling data from ``docs/data/memory/ci_stack_build333/stack_usage_full_aggregate.json`` (Zephyr `Thread analyzer`_ on profiling builds).
+Each **sample** tab lists **platforms** as rows and **threads** as columns.
+Columns are ordered by configured stack size (largest first, using the maximum size seen for that thread across platforms on the tab).
+Cells show peak **stack usage** and configured **stack size** in bytes (B).
+``--`` means the thread was not reported for that platform.
+The profiling ``thread_analyzer`` thread is omitted.
+Other system threads (for example ``idle``, ``ISR0``) appear when present in logs; application tuning via Kconfig focuses on ``main`` and ``zboss`` (``CONFIG_MAIN_STACK_SIZE``, ``CONFIG_ZBOSS_DEFAULT_THREAD_STACK_SIZE``).
 
 .. tabs::
 
@@ -246,62 +246,90 @@ Values are provided in bytes (B).
 
       .. tabs::
 
-         .. group-tab:: nRF52840
+         .. group-tab:: Network coordinator
 
-            Stack usage for samples running on the `nRF52840 DK <Board support_>`_ (`nrf52840dk`_).
+            Stack usage for the :ref:`Network coordinator <zigbee_network_coordinator_sample>` sample.
 
-            .. stack-board::
-               :board: nrf52840
+            .. stack-sample-board::
+               :sample: network_coordinator
 
-         .. group-tab:: nRF5340
+         .. group-tab:: Light bulb
 
-            Stack usage for samples running on the `nRF5340 DK <Board support_>`_ (`nrf5340dk`_).
+            Stack usage for the :ref:`Light bulb <zigbee_light_bulb_sample>` sample.
 
-            .. stack-board::
-               :board: nrf5340
+            .. stack-sample-board::
+               :sample: light_bulb
 
-         .. group-tab:: nRF54L15
+         .. group-tab:: Light switch
 
-            Stack usage for samples running on the `nRF54L15 DK <Board support_>`_ (`nrf54l15dk`_).
+            Stack usage for the :ref:`Light switch <zigbee_light_switch_sample>` sample.
 
-            .. stack-board::
-               :board: nrf54l15
+            .. stack-sample-board::
+               :sample: light_switch
 
-         .. group-tab:: nRF54LM20
+         .. group-tab:: Light switch with NUS
 
-            Stack usage for samples running on the `nRF54LM20 DK <Board support_>`_ (`nrf54lm20dk`_) with the ``nrf54lm20dk/nrf54lm20a/cpuapp`` or ``nrf54lm20dk/nrf54lm20b/cpuapp`` board targets.
+            Stack usage for the :ref:`Light switch <zigbee_light_switch_sample>` with :ref:`zigbee_light_switch_sample_nus` sample.
 
-            .. stack-board::
-               :board: nrf54lm20
+            .. stack-sample-board::
+               :sample: light_switch_nus
+
+         .. group-tab:: Zigbee shell
+
+            Stack usage for the :ref:`Zigbee shell <zigbee_shell_sample>` sample.
+
+            .. stack-sample-board::
+               :sample: shell
+
+         .. group-tab:: Zigbee shell over USB
+
+            Stack usage for the :ref:`Zigbee shell over USB <zigbee_shell_sample>` sample.
+
+            .. stack-sample-board::
+               :sample: shell_usb
 
    .. group-tab:: Tables
 
       .. tabs::
 
-         .. group-tab:: nRF52840
+         .. group-tab:: Network coordinator
 
-            The following table lists stack usage for samples running on the `nRF52840 DK <Board support_>`_ (`nrf52840dk`_).
+            Stack usage for the :ref:`Network coordinator <zigbee_network_coordinator_sample>` sample.
 
-            .. stack-table::
-               :board: nrf52840
+            .. stack-sample-table::
+               :sample: network_coordinator
 
-         .. group-tab:: nRF5340
+         .. group-tab:: Light bulb
 
-            The following table lists stack usage for samples running on the `nRF5340 DK <Board support_>`_ (`nrf5340dk`_).
+            Stack usage for the :ref:`Light bulb <zigbee_light_bulb_sample>` sample.
 
-            .. stack-table::
-               :board: nrf5340
+            .. stack-sample-table::
+               :sample: light_bulb
 
-         .. group-tab:: nRF54L15
+         .. group-tab:: Light switch
 
-            The following table lists stack usage for samples running on the `nRF54L15 DK <Board support_>`_ (`nrf54l15dk`_).
+            Stack usage for the :ref:`Light switch <zigbee_light_switch_sample>` sample.
 
-            .. stack-table::
-               :board: nrf54l15
+            .. stack-sample-table::
+               :sample: light_switch
 
-         .. group-tab:: nRF54LM20
+         .. group-tab:: Light switch with NUS
 
-            The following table lists stack usage for samples running on the `nRF54LM20 DK <Board support_>`_ (`nrf54lm20dk`_) with the ``nrf54lm20dk/nrf54lm20a/cpuapp`` or ``nrf54lm20dk/nrf54lm20b/cpuapp`` board targets.
+            Stack usage for the :ref:`Light switch <zigbee_light_switch_sample>` with :ref:`zigbee_light_switch_sample_nus` sample.
 
-            .. stack-table::
-               :board: nrf54lm20
+            .. stack-sample-table::
+               :sample: light_switch_nus
+
+         .. group-tab:: Zigbee shell
+
+            Stack usage for the :ref:`Zigbee shell <zigbee_shell_sample>` sample.
+
+            .. stack-sample-table::
+               :sample: shell
+
+         .. group-tab:: Zigbee shell over USB
+
+            Stack usage for the :ref:`Zigbee shell over USB <zigbee_shell_sample>` sample.
+
+            .. stack-sample-table::
+               :sample: shell_usb

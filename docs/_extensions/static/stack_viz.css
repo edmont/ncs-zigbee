@@ -14,6 +14,80 @@
   container-name: stack-viz-board;
 }
 
+/* --- Sample-centric matrix (platforms × threads) --- */
+
+.stack-sample-matrix-outer {
+  overflow-x: auto;
+}
+
+.stack-sample-matrix.stack-viz-board {
+  max-width: none;
+  min-width: min(100%, 52rem);
+}
+
+.stack-sample-grid {
+  display: grid;
+  grid-template-columns: var(--stack-sample-cols);
+  column-gap: 0.75rem;
+  row-gap: 0.5rem;
+  align-items: center;
+  width: max-content;
+  min-width: 100%;
+  box-sizing: border-box;
+}
+
+.stack-sample-cell {
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.stack-sample-head {
+  font-weight: 600;
+  font-size: 0.92rem;
+  line-height: 1.25;
+  padding-bottom: 0.65rem;
+  margin-bottom: 0.35rem;
+  border-bottom: 1px solid var(--bs-border-color, #dee2e6);
+}
+
+.stack-sample-head-size {
+  font-weight: 500;
+  font-size: 0.82rem;
+  color: var(--bs-secondary-color, #6c757d);
+}
+
+.stack-sample-platform-col {
+  font-size: 0.92rem;
+  padding-right: 0.35rem;
+}
+
+.stack-sample-data-row {
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--bs-border-color, #dee2e6);
+}
+
+.stack-sample-bar-col {
+  /* Column track width = fr(max stack size); bar scales within track */
+}
+
+.stack-sample-bar-wrap {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.stack-sample-bar-wrap .stack-viz-thread-bar {
+  max-width: 100%;
+}
+
+.stack-req-table.stack-sample-table {
+  display: block;
+  overflow-x: auto;
+  width: 100%;
+}
+
 .stack-viz-board-inner,
 .stack-viz-samples,
 .stack-viz-chart-header,
@@ -64,6 +138,24 @@
   border-bottom: none;
 }
 
+.stack-viz-board .memory-viz-bar-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.stack-viz-board .stack-viz-thread-empty {
+  color: var(--bs-secondary-color, #6c757d);
+  font-size: 0.9rem;
+  min-height: 1.25rem;
+  align-items: center;
+}
+
+.stack-viz-board .stack-viz-thread-bar {
+  flex: 0 0 auto;
+  max-width: 100%;
+}
+
 .stack-viz-sample-row > .memory-viz-sample-label {
   margin: 0;
   width: 100%;
@@ -76,111 +168,118 @@
   max-width: none;
 }
 
+.stack-sample-matrix-docutils.docutils.container {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+  margin: 0;
+}
+
 @container stack-viz-board (max-width: 50rem) {
-  .stack-viz-board {
+  .stack-viz-board:not(.stack-sample-matrix) {
     max-width: 100%;
   }
 
-  .stack-viz-chart-header,
-  .stack-viz-chart-header.docutils.container,
-  .stack-viz-sample-row,
-  .stack-viz-sample-row.docutils.container {
+  .stack-viz-board:not(.stack-sample-matrix) .stack-viz-chart-header,
+  .stack-viz-board:not(.stack-sample-matrix) .stack-viz-chart-header.docutils.container,
+  .stack-viz-board:not(.stack-sample-matrix) .stack-viz-sample-row,
+  .stack-viz-board:not(.stack-sample-matrix) .stack-viz-sample-row.docutils.container {
     grid-template-columns:
       minmax(0, var(--stack-viz-main-fr, 2048fr))
       minmax(0, var(--stack-viz-zboss-fr, 5120fr));
     width: 100%;
   }
 
-  .stack-viz-chart-header,
-  .stack-viz-chart-header.docutils.container {
+  .stack-viz-board:not(.stack-sample-matrix) .stack-viz-chart-header,
+  .stack-viz-board:not(.stack-sample-matrix) .stack-viz-chart-header.docutils.container {
     grid-template-areas: "main zboss";
   }
 
-  .stack-viz-chart-header .memory-viz-panel-title-sample {
+  .stack-viz-board:not(.stack-sample-matrix) .stack-viz-chart-header .memory-viz-panel-title-sample {
     display: none;
   }
 
-  .stack-viz-chart-header > .stack-viz-header-thread:first-of-type {
+  .stack-viz-board:not(.stack-sample-matrix) .stack-viz-chart-header > .stack-viz-header-thread:first-of-type {
     grid-area: main;
   }
 
-  .stack-viz-chart-header > .stack-viz-header-thread:last-of-type {
+  .stack-viz-board:not(.stack-sample-matrix) .stack-viz-chart-header > .stack-viz-header-thread:last-of-type {
     grid-area: zboss;
   }
 
-  .stack-viz-sample-row,
-  .stack-viz-sample-row.docutils.container {
+  .stack-viz-board:not(.stack-sample-matrix) .stack-viz-sample-row,
+  .stack-viz-board:not(.stack-sample-matrix) .stack-viz-sample-row.docutils.container {
     grid-template-areas:
       "sample sample"
       "main zboss";
     gap: 0.5rem 0.75rem;
   }
 
-  .stack-viz-sample-row > .memory-viz-sample-label {
+  .stack-viz-board:not(.stack-sample-matrix) .stack-viz-sample-row > .memory-viz-sample-label {
     grid-area: sample;
     margin-bottom: 0.1rem;
   }
 
-  .stack-viz-sample-row > .memory-viz-bar-wrap:nth-of-type(1) {
+  .stack-viz-board:not(.stack-sample-matrix) .stack-viz-sample-row > .memory-viz-bar-wrap:nth-of-type(1) {
     grid-area: main;
   }
 
-  .stack-viz-sample-row > .memory-viz-bar-wrap:nth-of-type(2) {
+  .stack-viz-board:not(.stack-sample-matrix) .stack-viz-sample-row > .memory-viz-bar-wrap:nth-of-type(2) {
     grid-area: zboss;
   }
 }
 
 @media (max-width: 900px) {
-  .stack-viz-board {
+  .stack-viz-board:not(.stack-sample-matrix) {
     max-width: 100%;
   }
 
-  .stack-viz-chart-header,
-  .stack-viz-chart-header.docutils.container,
-  .stack-viz-sample-row,
-  .stack-viz-sample-row.docutils.container {
+  .stack-viz-board:not(.stack-sample-matrix) .stack-viz-chart-header,
+  .stack-viz-board:not(.stack-sample-matrix) .stack-viz-chart-header.docutils.container,
+  .stack-viz-board:not(.stack-sample-matrix) .stack-viz-sample-row,
+  .stack-viz-board:not(.stack-sample-matrix) .stack-viz-sample-row.docutils.container {
     grid-template-columns:
       minmax(0, var(--stack-viz-main-fr, 2048fr))
       minmax(0, var(--stack-viz-zboss-fr, 5120fr));
     width: 100%;
   }
 
-  .stack-viz-chart-header,
-  .stack-viz-chart-header.docutils.container {
+  .stack-viz-board:not(.stack-sample-matrix) .stack-viz-chart-header,
+  .stack-viz-board:not(.stack-sample-matrix) .stack-viz-chart-header.docutils.container {
     grid-template-areas: "main zboss";
     gap: 0.5rem 0.75rem;
   }
 
-  .stack-viz-chart-header .memory-viz-panel-title-sample {
+  .stack-viz-board:not(.stack-sample-matrix) .stack-viz-chart-header .memory-viz-panel-title-sample {
     display: none;
   }
 
-  .stack-viz-chart-header > .stack-viz-header-thread:first-of-type {
+  .stack-viz-board:not(.stack-sample-matrix) .stack-viz-chart-header > .stack-viz-header-thread:first-of-type {
     grid-area: main;
   }
 
-  .stack-viz-chart-header > .stack-viz-header-thread:last-of-type {
+  .stack-viz-board:not(.stack-sample-matrix) .stack-viz-chart-header > .stack-viz-header-thread:last-of-type {
     grid-area: zboss;
   }
 
-  .stack-viz-sample-row,
-  .stack-viz-sample-row.docutils.container {
+  .stack-viz-board:not(.stack-sample-matrix) .stack-viz-sample-row,
+  .stack-viz-board:not(.stack-sample-matrix) .stack-viz-sample-row.docutils.container {
     grid-template-areas:
       "sample sample"
       "main zboss";
     gap: 0.5rem 0.75rem;
   }
 
-  .stack-viz-sample-row > .memory-viz-sample-label {
+  .stack-viz-board:not(.stack-sample-matrix) .stack-viz-sample-row > .memory-viz-sample-label {
     grid-area: sample;
     margin-bottom: 0.1rem;
   }
 
-  .stack-viz-sample-row > .memory-viz-bar-wrap:nth-of-type(1) {
+  .stack-viz-board:not(.stack-sample-matrix) .stack-viz-sample-row > .memory-viz-bar-wrap:nth-of-type(1) {
     grid-area: main;
   }
 
-  .stack-viz-sample-row > .memory-viz-bar-wrap:nth-of-type(2) {
+  .stack-viz-board:not(.stack-sample-matrix) .stack-viz-sample-row > .memory-viz-bar-wrap:nth-of-type(2) {
     grid-area: zboss;
   }
 }

@@ -10,6 +10,9 @@ Board data lives in docs/data/memory/<board>.yaml.
 
 from __future__ import annotations
 
+import json
+from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -20,10 +23,33 @@ from docutils.statemachine import StringList
 from sphinx.application import Sphinx
 from sphinx.util.docutils import SphinxDirective
 
+from stack_log_parse import filter_threads_for_docs
+
 __version__ = "0.1.0"
 
 RESOURCES_DIR = Path(__file__).parent / "static"
 DATA_DIR = Path(__file__).parents[1] / "data" / "memory"
+FULL_STACK_AGGREGATE_PATH = DATA_DIR / "ci_stack_build333" / "stack_usage_full_aggregate.json"
+
+# Row order for sample-centric stack tables (platforms).
+STACK_PLATFORM_ORDER: tuple[str, ...] = (
+    "nrf52840",
+    "nrf5340",
+    "nrf54l10",
+    "nrf54l15",
+    "nrf54lm20",
+    "nrf52840_dongle",
+)
+
+# Tab order for stack views (sample keys in CI aggregate JSON).
+STACK_SAMPLE_KEY_ORDER: tuple[str, ...] = (
+    "network_coordinator",
+    "light_bulb",
+    "light_switch",
+    "light_switch_nus",
+    "shell",
+    "shell_usb",
+)
 
 INTERNAL_NVM_COLUMNS = (
     ("boot", "MCUboot (used / free)"),
@@ -40,33 +66,71 @@ EXTERNAL_NVM_COLUMN_ORDER = ("slot1_ext", "slot3_ext")
 RAM_SUBHEAD = "used / free"
 EMPTY_CELL = "--"
 
+DEFAULT_MAIN_STACK_SIZE_B = 1280
+DEFAULT_ZBOSS_STACK_SIZE_B = 2944
+
 STACK_MAIN_SUBHEADS = ("stack usage", "stack size")
 STACK_ZBOSS_SUBHEADS = ("stack usage", "stack size")
 
 PADDING_LABEL = "Unused"
 
 
+def _sample_entries(data: dict[str, Any]) -> list[dict[str, Any]]:
+    entries = data.get("samples")
+    if not entries:
+        return []
+    return entries
+
+
 def applicable_samples(data: dict[str, Any]) -> list[dict[str, Any]]:
-    return [sample for sample in data["samples"] if not sample.get("not_applicable")]
+    return [
+        sample for sample in _sample_entries(data) if not sample.get("not_applicable")
+    ]
 
 
 def stack_samples(data: dict[str, Any]) -> list[dict[str, Any]]:
-    return [sample for sample in data.get("samples", []) if sample.get("stack")]
+    samples: list[dict[str, Any]] = []
+    for sample in _sample_entries(data):
+        if sample.get("not_applicable"):
+            continue
+        stack = sample.get("stack")
+        if not stack:
+            continue
+        if "main" in stack or "zboss" in stack:
+            samples.append(sample)
+    return samples
 
 
 def stack_thread_sizes(samples: list[dict[str, Any]]) -> tuple[int, int]:
-    main_sizes = [int(sample["stack"]["main"]["size_b"]) for sample in samples]
-    zboss_sizes = [int(sample["stack"]["zboss"]["size_b"]) for sample in samples]
-    return max(main_sizes), max(zboss_sizes)
+    main_sizes = [
+        int(sample["stack"]["main"]["size_b"])
+        for sample in samples
+        if sample.get("stack", {}).get("main")
+    ]
+    zboss_sizes = [
+        int(sample["stack"]["zboss"]["size_b"])
+        for sample in samples
+        if sample.get("stack", {}).get("zboss")
+    ]
+    main_max = max(main_sizes) if main_sizes else DEFAULT_MAIN_STACK_SIZE_B
+    zboss_max = max(zboss_sizes) if zboss_sizes else DEFAULT_ZBOSS_STACK_SIZE_B
+    return main_max, zboss_max
+
+
+def _stack_cell(stack: dict[str, Any], thread: str, field: str) -> str:
+    thread_data = stack.get(thread)
+    if not thread_data or field not in thread_data:
+        return EMPTY_CELL
+    return str(int(thread_data[field]))
 
 
 def sample_stack_table_cells(sample: dict[str, Any]) -> list[str]:
     stack = sample["stack"]
     return [
-        str(int(stack["main"]["used_b"])),
-        str(int(stack["main"]["size_b"])),
-        str(int(stack["zboss"]["used_b"])),
-        str(int(stack["zboss"]["size_b"])),
+        _stack_cell(stack, "main", "used_b"),
+        _stack_cell(stack, "main", "size_b"),
+        _stack_cell(stack, "zboss", "used_b"),
+        _stack_cell(stack, "zboss", "size_b"),
     ]
 
 
@@ -518,12 +582,15 @@ def build_memory_table_nodes(directive: SphinxDirective, data: dict[str, Any]) -
     return table
 
 
-def build_stack_table_nodes(directive: SphinxDirective, data: dict[str, Any]) -> nodes.table:
+def build_stack_table_nodes(
+    directive: SphinxDirective, data: dict[str, Any]
+) -> nodes.table | nodes.paragraph:
     samples = stack_samples(data)
     if not samples:
-        raise ValueError(
-            f"No stack measurements in docs/data/memory for board {data.get('board', {}).get('name')}"
-        )
+        board_name = data.get("board", {}).get("name", "unknown")
+        paragraph = nodes.paragraph()
+        paragraph += nodes.Text(f"No stack measurements for {board_name}.")
+        return paragraph
 
     table = nodes.table()
     table["classes"] = ["memory-req-table", "stack-req-table"]
@@ -577,9 +644,208 @@ def build_stack_table_nodes(directive: SphinxDirective, data: dict[str, Any]) ->
         row += sample_entry
 
         for value in sample_stack_table_cells(sample):
-            _append_text_cell(row, value)
+            css = "memory-req-empty" if value == EMPTY_CELL else "memory-req-value"
+            _append_text_cell(row, value, css_class=css)
 
     return table
+
+
+@dataclass(frozen=True)
+class SampleStackMatrix:
+    sample_key: str
+    platforms: tuple[str, ...]
+    threads: tuple[str, ...]
+    thread_max_size_b: dict[str, int]
+    cells: dict[tuple[str, str], dict[str, int]]
+
+
+def note_stack_aggregate_dependency(env: Any) -> None:
+    """Ensure memory.rst is rebuilt when CI stack JSON changes (incremental Sphinx)."""
+    path = FULL_STACK_AGGREGATE_PATH
+    if path.is_file():
+        env.note_dependency(path.resolve().as_posix())
+
+
+@lru_cache(maxsize=4)
+def load_full_stack_aggregate(_mtime_ns: int) -> dict[str, dict[str, dict[str, dict[str, int]]]]:
+    """board_id -> sample_key -> thread -> {used_b, size_b, ...}"""
+    path = FULL_STACK_AGGREGATE_PATH
+    if not path.is_file():
+        return {}
+    with path.open(encoding="utf-8") as handle:
+        payload = json.load(handle)
+    boards = payload.get("boards")
+    if not isinstance(boards, dict):
+        return {}
+    return boards
+
+
+def _load_full_stack_aggregate_boards() -> dict[str, dict[str, dict[str, dict[str, int]]]]:
+    path = FULL_STACK_AGGREGATE_PATH
+    if not path.is_file():
+        return {}
+    return load_full_stack_aggregate(path.stat().st_mtime_ns)
+
+
+def stack_sample_keys_with_data() -> list[str]:
+    boards = _load_full_stack_aggregate_boards()
+    present = {key for samples in boards.values() for key in samples}
+    return [key for key in STACK_SAMPLE_KEY_ORDER if key in present]
+
+
+@lru_cache(maxsize=None)
+def board_display_name(board_id: str) -> str:
+    path = DATA_DIR / f"{board_id}.yaml"
+    if path.is_file():
+        with path.open(encoding="utf-8") as handle:
+            data = yaml.safe_load(handle) or {}
+        name = (data.get("board") or {}).get("name")
+        if name:
+            return str(name)
+    return board_id
+
+
+def build_sample_stack_matrix(sample_key: str) -> SampleStackMatrix | None:
+    boards = _load_full_stack_aggregate_boards()
+    platform_data: dict[str, dict[str, dict[str, int]]] = {}
+    for board_id in STACK_PLATFORM_ORDER:
+        sample_threads = boards.get(board_id, {}).get(sample_key)
+        if sample_threads:
+            filtered = filter_threads_for_docs(sample_threads)
+            if filtered:
+                platform_data[board_id] = filtered
+    if not platform_data:
+        return None
+
+    all_threads: set[str] = set()
+    for threads in platform_data.values():
+        all_threads.update(threads.keys())
+
+    def max_size_b(thread: str) -> int:
+        sizes = [
+            int(platform_data[plat][thread]["size_b"])
+            for plat in platform_data
+            if thread in platform_data[plat]
+        ]
+        return max(sizes) if sizes else 0
+
+    threads_ordered = tuple(
+        sorted(all_threads, key=lambda name: (-max_size_b(name), name.lower()))
+    )
+    thread_max_size_b = {name: max_size_b(name) for name in threads_ordered}
+
+    cells: dict[tuple[str, str], dict[str, int]] = {}
+    for board_id, thread_map in platform_data.items():
+        for thread in threads_ordered:
+            stats = thread_map.get(thread)
+            if stats:
+                cells[(board_id, thread)] = {
+                    "used_b": int(stats["used_b"]),
+                    "size_b": int(stats["size_b"]),
+                }
+
+    return SampleStackMatrix(
+        sample_key=sample_key,
+        platforms=tuple(platform_data.keys()),
+        threads=threads_ordered,
+        thread_max_size_b=thread_max_size_b,
+        cells=cells,
+    )
+
+
+def _thread_header_label(thread: str, max_size_b: int) -> str:
+    return f"{thread} ({max_size_b}\u202fB max)"
+
+
+def build_stack_sample_table_nodes(matrix: SampleStackMatrix) -> nodes.table | nodes.paragraph:
+    if not matrix.platforms or not matrix.threads:
+        paragraph = nodes.paragraph()
+        paragraph += nodes.Text(f"No stack data for sample {matrix.sample_key}.")
+        return paragraph
+
+    n_thread_cols = len(matrix.threads)
+    table = nodes.table()
+    table["classes"] = ["memory-req-table", "stack-req-table", "stack-sample-table"]
+
+    total_cols = 1 + n_thread_cols * 2
+    tgroup = nodes.tgroup(cols=total_cols)
+    table += tgroup
+    tgroup.extend([nodes.colspec(colwidth=16)] + [nodes.colspec(colwidth=8)] * (total_cols - 1))
+
+    thead = nodes.thead()
+    tgroup += thead
+
+    group_row = nodes.row()
+    thead += group_row
+
+    platform_group = nodes.entry()
+    platform_group["morerows"] = 1
+    platform_group += nodes.Text("Platform")
+    group_row += platform_group
+
+    for thread in matrix.threads:
+        thread_group = nodes.entry()
+        thread_group["morecols"] = 1
+        thread_group["classes"] = ["memory-req-group-stack-thread"]
+        thread_group += nodes.Text(_thread_header_label(thread, matrix.thread_max_size_b[thread]))
+        group_row += thread_group
+
+    sub_row = nodes.row()
+    thead += sub_row
+
+    for _thread in matrix.threads:
+        for label in STACK_MAIN_SUBHEADS:
+            entry = nodes.entry()
+            entry["classes"] = ["memory-req-subhead"]
+            entry += nodes.Text(label)
+            sub_row += entry
+
+    tbody = nodes.tbody()
+    tgroup += tbody
+
+    for board_id in matrix.platforms:
+        row = nodes.row()
+        tbody += row
+
+        platform_entry = nodes.entry()
+        platform_entry["classes"] = ["memory-req-sample"]
+        platform_entry += nodes.Text(board_display_name(board_id))
+        row += platform_entry
+
+        for thread in matrix.threads:
+            stats = matrix.cells.get((board_id, thread))
+            if stats:
+                values = (str(stats["used_b"]), str(stats["size_b"]))
+            else:
+                values = (EMPTY_CELL, EMPTY_CELL)
+            for value in values:
+                css = "memory-req-empty" if value == EMPTY_CELL else "memory-req-value"
+                _append_text_cell(row, value, css_class=css)
+
+    return table
+
+
+class StackSampleTable(SphinxDirective):
+    """Stack usage table: platforms as rows, threads as columns (CI full aggregate)."""
+
+    required_arguments = 0
+    optional_arguments = 0
+    final_argument_whitespace = True
+    has_content = False
+    option_spec = {
+        "sample": directives.unchanged_required,
+    }
+
+    def run(self) -> list[nodes.Node]:
+        note_stack_aggregate_dependency(self.env)
+        matrix = build_sample_stack_matrix(self.options["sample"])
+        if matrix is None:
+            paragraph = nodes.paragraph()
+            paragraph += nodes.Text(
+                f"No stack measurements for sample {self.options['sample']}."
+            )
+            return [paragraph]
+        return [build_stack_sample_table_nodes(matrix)]
 
 
 class StackTable(SphinxDirective):
@@ -624,6 +890,7 @@ def add_memory_table_resources(app: Sphinx) -> None:
 def setup(app: Sphinx) -> dict[str, Any]:
     app.add_directive("memory-table", MemoryTable)
     app.add_directive("stack-table", StackTable)
+    app.add_directive("stack-sample-table", StackSampleTable)
     app.connect("builder-inited", add_memory_table_resources)
     return {
         "version": __version__,
