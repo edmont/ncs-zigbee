@@ -62,6 +62,7 @@ The following release is `supported <Software maturity levels_>`_.
 
   * In the :ref:`zigbee_light_bulb_sample` on nRF52 and nRF53 DKs, use LED 2 instead of LED 4 for the dimmable light output.
     In FOTA builds of the :ref:`zigbee_light_bulb_sample`, use LED 4 instead of LED 2 for FOTA activity.
+  * If you enabled ``CONFIG_ZIGBEE_GP_CB`` for evaluation builds with ``CONFIG_ZBOSS_LIBRARY_SOURCES``, switch to ``CONFIG_ZIGBEE_GP_PB`` or disable Green Power in Kconfig if you do not need it.
 
 .. _zigbee_release:
 
