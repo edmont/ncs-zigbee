@@ -12,7 +12,7 @@
  *
  * Note: This value is automatically updated by the release script.
  */
-#define ZBOSS_SDK_REVISION 5U
+#define ZBOSS_SDK_REVISION 0U
 
 /**
  * Major version number of the ZBOSS platform for NCS.
@@ -29,14 +29,14 @@
  *
  * Note: This value is automatically updated by the release script.
  */
-#define ZBOSS_PLATFORM_PATCH 10U
+#define ZBOSS_PLATFORM_PATCH 0U
 
 /**
  * Patch version number of the ZBOSS core.
  *
  * Note: This value is automatically updated by the release script.
  */
-#define ZBOSS_PATCH 2U
+#define ZBOSS_PATCH 14U
 
 /**
  * Combined revision number for zboss_version_get() function.
