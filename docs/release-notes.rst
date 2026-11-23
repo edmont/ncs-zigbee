@@ -52,6 +52,12 @@ The following release is `supported <Software maturity levels_>`_.
     ``CONFIG_ZBOSS_DEFAULT_THREAD_STACK_SIZE`` 3328, and ``CONFIG_SYSTEM_WORKQUEUE_STACK_SIZE`` 1024.
     ``CONFIG_ZIGBEE_BT_DFU`` still uses a larger system workqueue for SMP.
   * Removed the stack memory requirements section from the :ref:`Memory requirements <zigbee_memory>` page.
+  * NCP Host package logging for the low-level UART transport between the host and the NCP device:
+
+    * The default host build enables NCP transport traces in addition to application traces (``ZB_TRACE_MASK`` includes the NCP transport bit, ``0x0400``, as well as the application bit, ``0x0800``).
+    * Low-level transport lines are emitted as ZBOSS file-and-line messages from ``zbncp_ll_impl.c`` (for example ``size N ack? M``), not as legacy ``__func__``-prefixed strings such as ``zbncp_ll_tx_start_sending:``.
+    * In text trace output, those transport messages use the ``[SSLn]`` tag, because the NCP transport trace subsystem shares the ZBOSS SSL trace mask entry; they are not tagged as ``[APPn]`` or ``[INFOn]``.
+    * The ``ACK flags 0x…`` line is not printed in release-style host builds (``ZBNCP_DEBUG=0``). To confirm that traffic flows from the NCP device to the host, look for a ``size N ack? 1`` line (the host sending a low-level ACK) or for application traces such as ``Device STARTED OK``.
 
 * Removed:
 
@@ -63,6 +69,7 @@ The following release is `supported <Software maturity levels_>`_.
   * In the :ref:`zigbee_light_bulb_sample` on nRF52 and nRF53 DKs, use LED 2 instead of LED 4 for the dimmable light output.
     In FOTA builds of the :ref:`zigbee_light_bulb_sample`, use LED 4 instead of LED 2 for FOTA activity.
   * If you enabled ``CONFIG_ZIGBEE_GP_CB`` for evaluation builds with ``CONFIG_ZBOSS_LIBRARY_SOURCES``, switch to ``CONFIG_ZIGBEE_GP_PB`` or disable Green Power in Kconfig if you do not need it.
+  * If you parse :ref:`ZBOSS NCP Host <ug_zigbee_tools_ncp_host>` log files in scripts or test automation, update matchers for low-level UART traces: expect ``zbncp_ll_impl.c`` lines with ``[SSLn]`` and ``size … ack? …``, and do not rely on ``ACK flags`` or ``[INFOn]`` prefixes for transport messages.
 
 .. _zigbee_release:
 
