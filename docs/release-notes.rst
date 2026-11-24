@@ -39,10 +39,17 @@ For a full list of |addon| releases, related |NCS| and ZBOSS stack and NCP host 
 | 0.1.0             |                  |                       | N/A                 | 
 +-------------------+------------------+-----------------------+---------------------+
 
-|addon| vX.Y.Z - TBD
+|addon| v4.2.7.1 - TBD
 ***************************
 
 The following release is `supported <Software maturity levels_>`_.
+
+* Added:
+
+  * Support for the nRF Connect SDK v3.4.2.
+  * The new ZBOSS R23 v4.2.7.1.
+    See :ref:`zboss_stack_updates_4271` for the full list of stack fixes and enhancements.
+  * The ZBOSS NCP Host package v3.8.0.
 
 * Updated:
 
