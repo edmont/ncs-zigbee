@@ -465,7 +465,6 @@ zb_uint8_t* zb_zcl_put_value_to_packet(zb_uint8_t *cmd_ptr, zb_uint8_t attr_type
     case ZB_ZCL_ATTR_TYPE_56BIT:
     case ZB_ZCL_ATTR_TYPE_56BITMAP:
       ZB_ZCL_PACKET_PUT_DATA56(cmd_ptr, attr_value);
-      ZB_ZCL_PACKET_PUT_DATA_N(cmd_ptr, attr_value, 7);
       break;
 
     case ZB_ZCL_ATTR_TYPE_OCTET_STRING:
